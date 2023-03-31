@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('title');
             $table->longText('description');
             $table->string('cover_image')->nullable();
-            $table->string('banner_image')->nullable();
+            $table->string('extra_large_banner_image')->nullable();
+            $table->string('large_banner_image')->nullable();
+            $table->string('medium_banner_image')->nullable();
             $table->string('format');
             $table->integer('episodes')->nullable();
             $table->integer('chapters')->nullable();
@@ -25,10 +27,10 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->enum('season', array('WINTER', 'SPRING', 'SUMMER', 'FALL'))->nullable();
             $table->integer('season_year');
-            $table->json('studio');
+            $table->json('studios');
             $table->string('source');
             $table->json('genres');
-            $table->string('romanji')->nullable();
+            $table->string('romaji')->nullable();
             $table->string('native')->nullable();
             $table->string('trailer')->nullable();
             $table->json('tags');
