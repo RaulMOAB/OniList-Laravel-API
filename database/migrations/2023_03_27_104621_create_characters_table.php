@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('characters', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('romanji');
+            $table->string('romaji');
             $table->string('pronuntation');
             $table->longText('description')->nullable();
             $table->string('role');

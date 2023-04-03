@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('role');
             $table->foreignId('personal_data_id')
+                ->default(0) //cambiar persona_data_id
                 ->cascadeOnDelete();
             $table->rememberToken();
             $table->timestamps();

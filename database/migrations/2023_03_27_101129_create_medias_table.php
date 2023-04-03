@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->string('cover_image')->nullable();
+            //$table->string('cover_image')->nullable();//quitar?
             $table->string('extra_large_banner_image')->nullable();
             $table->string('large_banner_image')->nullable();
             $table->string('medium_banner_image')->nullable();
