@@ -58,96 +58,96 @@ function getData(string $query, array $variables): array
     ]
   ]);
   $data = build_data_array(json_decode($response->getBody(), true));
-  return $data;
   //var_dump(json_decode($response->getBody(), true));
-
+  return $data;
 }
 
 function build_data_array(array $data): array
 {
-  $base = $data['data']['Media'];
+  $base = $data['data']['Page']['media'][0]['title'];
+  var_dump($base);
   //startDate
-  $startDate = $base['startDate'];
-  $yearDate = $startDate['year'];
-  $monthDate = $startDate['month'];
-  $dayDate = $startDate['day'];
-  //endDate
-  $endtDate = $base['endDate'];
-  $endYearDate = $endtDate['year'];
-  $endMonthDate = $endtDate['month'];
-  $endDayDate = $endtDate['day'];
+  // $startDate = $base['startDate'];
+  // $yearDate = $startDate['year'];
+  // $monthDate = $startDate['month'];
+  // $dayDate = $startDate['day'];
+  // //endDate
+  // $endtDate = $base['endDate'];
+  // $endYearDate = $endtDate['year'];
+  // $endMonthDate = $endtDate['month'];
+  // $endDayDate = $endtDate['day'];
 
 
   //Build data to insert
-  $title = $base['title']['romaji'];
-  $description = $base['description'];
-  $extra_large_banner_image = $base['coverImage']['extraLarge'];
-  $large_banner_image = $base['coverImage']['large'];
-  $medium_banner_image = $base['coverImage']['medium'];
-  $format = $base['format'];
-  $episodes = $base['episodes'];
-  $chapters = $base['chapters'];
-  $airing_status = $base['status'];
-  $start_date_builded = $yearDate . '-' . $monthDate . '-' . $dayDate;
-  $start_date = strtotime($start_date_builded);
-  $end_date_builded = $endYearDate . '-' . $endMonthDate . '-' . $endDayDate;
-  $end_date = strtotime($end_date_builded);
-  $season = $base['season'];
-  $season_year = $base['seasonYear'];
-  $studios = $base['studios']['nodes']; //array
-  $source = $base['source'];
-  $genres = $base['genres'];
-  $romaji = $base['title']['romaji'];
-  $native = $base['title']['native'];
-  $trailer = $base['trailer'];
-  $tags = $base['tags'];
-  $external_link = $base['externalLinks'];
-  $type = $base['type'];
+  //$title = $base['title']['romaji'];
+  // $description = $base['description'];
+  // $extra_large_banner_image = $base['coverImage']['extraLarge'];
+  // $large_banner_image = $base['coverImage']['large'];
+  // $medium_banner_image = $base['coverImage']['medium'];
+  // $format = $base['format'];
+  // $episodes = $base['episodes'];
+  // $chapters = $base['chapters'];
+  // $airing_status = $base['status'];
+  // $start_date_builded = $yearDate . '-' . $monthDate . '-' . $dayDate;
+  // $start_date = strtotime($start_date_builded);
+  // $end_date_builded = $endYearDate . '-' . $endMonthDate . '-' . $endDayDate;
+  // $end_date = strtotime($end_date_builded);
+  // $season = $base['season'];
+  // $season_year = $base['seasonYear'];
+  // $studios = $base['studios']['nodes']; //array
+  // $source = $base['source'];
+  // $genres = $base['genres'];
+  // $romaji = $base['title']['romaji'];
+  // $native = $base['title']['native'];
+  // $trailer = $base['trailer'];
+  // $tags = $base['tags'];
+  // $external_link = $base['externalLinks'];
+  // $type = $base['type'];
 
+
+  //print_r($base);
 
   $media_data = [
-    'title'                    => $title,
-    'description'              => $description,
-    'extra_large_banner_image' => $extra_large_banner_image,
-    'large_banner_image'       => $large_banner_image,
-    'medium_banner_image'      => $medium_banner_image,
-    'format'                   => $format,
-    'episodes'                 => $episodes,
-    'chapters'                 => $chapters,
-    'airing_status'            => $airing_status,
-    'start_date'               => date('Y-m-d', $start_date), //string
-    'end_date'                 => date('Y-m-d', $end_date), //string
-    'season'                   => $season,
-    'season_year'              => $season_year,
-    'studios'                  => json_encode($studios),
-    'source'                   => $source,
-    'genres'                   => json_encode($genres),
-    'romaji'                   => $romaji,
-    'native'                   => $native,
-    'trailer'                  => $trailer,
-    'tags'                     => json_encode($tags),
-    'external_link'            => json_encode($external_link),
-    'type'                     => $type
+    //'title'                    => $title,
+    //'description'              => $description,
+    // 'extra_large_banner_image' => $extra_large_banner_image,
+    // 'large_banner_image'       => $large_banner_image,
+    // 'medium_banner_image'      => $medium_banner_image,
+    // 'format'                   => $format,
+    // 'episodes'                 => $episodes,
+    // 'chapters'                 => $chapters,
+    // 'airing_status'            => $airing_status,
+    // 'start_date'               => date('Y-m-d', $start_date), //string
+    // 'end_date'                 => date('Y-m-d', $end_date), //string
+    // 'season'                   => $season,
+    // 'season_year'              => $season_year,
+    // 'studios'                  => json_encode($studios),
+    // 'source'                   => $source,
+    // 'genres'                   => json_encode($genres),
+    // 'romaji'                   => $romaji,
+    // 'native'                   => $native,
+    // 'trailer'                  => $trailer,
+    // 'tags'                     => json_encode($tags),
+    // 'external_link'            => json_encode($external_link),
+    // 'type'                     => $type
   ];
 
 
 
-  var_dump($media_data);
+  //var_dump($media_data);
   // echo date('Y-m-d', $start_date) . PHP_EOL;
   // echo date('Y-m-d', $end_date);
 
   return $media_data;
 }
 
-//var_dump(json_decode($response->getBody(), true));
-//echo($response->getBody());
 
 function insert_data(PDO $db, array $data): void
 {
   $insert_sql_str = <<<END
-  INSERT INTO medias (title, description, extra_large_banner_image, large_banner_image, medium_banner_image, format, episodes, chapters, airing_status, start_date, end_date, season, season_year, studios, source, genres, romaji, native, trailer, tags, external_link, type)
-  VALUES (:title, :description, :extra_large_banner_image, :large_banner_image, :medium_banner_image, :format, :episodes, :chapters, :airing_status, :start_date, :end_date, :season, :season_year, :studios, :source, :genres, :romaji, :native, :trailer, :tags, :external_link, :type)
-END;
+    INSERT INTO medias (title, description, extra_large_banner_image, large_banner_image, medium_banner_image, format, episodes, chapters, airing_status, start_date, end_date, season, season_year, studios, source, genres, romaji, native, trailer, tags, external_link, type)
+    VALUES (:title, :description, :extra_large_banner_image, :large_banner_image, :medium_banner_image, :format, :episodes, :chapters, :airing_status, :start_date, :end_date, :season, :season_year, :studios, :source, :genres, :romaji, :native, :trailer, :tags, :external_link, :type)
+  END;
 
   $insert_statement = $db->prepare($insert_sql_str);
 
@@ -185,7 +185,7 @@ function main()
 {
   $db = connect_to_db();
 
-  $query = '
+  $media_query = '
 query ($id: Int){
   Media(id:$id){
     title {
@@ -237,15 +237,73 @@ query ($id: Int){
   }
 }
 ';
+  $media_gql = '
+query ($perPage: Int){
+  Page(perPage:$perPage){
+  pageInfo{
+    perPage
+    hasNextPage
+  }
+    media{
+    title {
+      romaji
+      english
+      native
+    }
+    description
+    coverImage {
+      extraLarge
+      large
+      medium
+    }
+    format
+    episodes
+    chapters
+   status
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    season
+    seasonYear
+    studios {
+      nodes {
+        name
+      }
+    }
+    source
+    genres
+    tags {
+      name
+    }
+    externalLinks {
+      url
+    }
+    type
+    trailer {
+      id
+      site
+      thumbnail
+    }
+  }
+  }
+}
+';
 
   // Define our query variables and values that will be used in the query request
   $variables = [
-    "id" => 1212
+    "perPage" => 1 //"id" => 1212 si quieres buscar una media por id
   ];
 
 
-  $media = getData($query, $variables);
-  insert_data($db, $media);
+  $media = getData($media_gql, $variables);
+  //insert_data($db, $media);
 }
 //------------------------------------------------------------------------
 main();
