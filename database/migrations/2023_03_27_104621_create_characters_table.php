@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('romaji');
-            $table->string('pronuntation');
+            $table->integer('age');
+            $table->string('gender');
             $table->longText('description')->nullable();
-            $table->string('role');
+            $table->string('image_large');
+            $table->string('image_medium');
             $table->timestamps();
         });
     }
