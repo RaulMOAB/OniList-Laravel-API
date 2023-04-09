@@ -26,7 +26,7 @@ function getStaff(GuzzleHttp\Client $http): array
 {
   $query = '
   query ($page: Int) { # Define each page
-    Page(page: $page, perPage: 2) {
+    Page(page: $page, perPage: 50) {
       pageInfo{
         hasNextPage
       }
@@ -47,27 +47,19 @@ function getStaff(GuzzleHttp\Client $http): array
   ';
 
   // Define our query variables and values that will be used in the query request
-  $variables = [
-    "page" => 1
-  ];
-
-
-
-
-  $response = $http->post('https://graphql.anilist.co', [
-    'json' => [
-      'query' => $query,
-      'variables' => $variables,
-    ]
-  ]);
+  
 
   $staffs = [];
   
   $hasNextPage = true;
-  $currentPage = $variables['page'];
+  $currentPage = 1;
   
   $index_request = 0 ;
   do {
+    $variables = [
+      "page" => $currentPage
+    ];
+
     
     $response = $http->post('https://graphql.anilist.co', [
       'json' => [
@@ -99,7 +91,7 @@ function getStaff(GuzzleHttp\Client $http): array
       array_push($staffs, $staff);
 
     }
-    $variables['page'] = $currentPage++;
+    $currentPage++;
     //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
     
     if($index_request == 90){//Si el numero de peticion es el 90
@@ -114,6 +106,33 @@ function getStaff(GuzzleHttp\Client $http): array
   return $staffs;
 }
 
+function insertStaffs(PDO $db,array $staffs){
+  $insert_sql_str = <<<END
+    INSERT INTO people (id, name, romaji, description, image_large, image_medium)
+    VALUES (:id, :name, :romaji, :description, :image_large, :image_medium)
+  END;
+
+  $insert_statement = $db->prepare($insert_sql_str);
+
+
+  //foreach ($data as $row) {
+  foreach ($staffs as $staff) {     
+    try {
+      $insert_statement->execute([
+        ':id' => $staff['id'],
+        ':name' => $staff['name'],
+        ':romaji' => $staff['romaji'],
+        ':description' => $staff['description'],
+        ':image_large' => $staff['image_large'],
+        ':image_medium' => $staff['image_medium'],
+      ]);
+    } catch (PDOException $e) {
+      echo "id repetido ??????";
+    } 
+  }
+
+}
+
 
 function main()
 {
@@ -122,16 +141,31 @@ function main()
   $username = 'root';
   $password = 'myroot';
   $dbname = 'onilist';
-
   #Create conection
   $db = connect_to_db($servername, $username, $password, $dbname);
-
   #Http Guzzle
   $http = new GuzzleHttp\Client;
 
+  ###INSERTIONS###
+
   #Staff insertion
   $staff_array_data = getStaff($http);
-  //TODO INSERT $staff_array_data to onilist database
+  insertStaffs($db, $staff_array_data);
+  #Media insertion
+
+  #Character insertion
+
+
+  #character_appears_in insertion
+
+
+  #person_dubs_character insertion
+
+
+  #related_to insertion
+
+
+  #works_in insertion
   //Sleep de 60 segundos por cada tabla
   
 
