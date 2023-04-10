@@ -14,8 +14,14 @@ return new class extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            //$table->string('pronuntation')->nullable();
             $table->string('romaji');
+            $table->string('gender')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('date_of_death')->nullable();
+            $table->integer('age')->nullable();
+            $table->string('years_active')->nullable();
+            $table->string('home_town')->nullable();
+            $table->string('blood_type')->nullable();
             $table->longText('description')->nullable();
             $table->string('image_large')->nullable();
             $table->string('image_medium')->nullable();
