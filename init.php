@@ -35,7 +35,7 @@ function getStaff(GuzzleHttp\Client $http): array
 {
   $query = '
   query ($page: Int) { # Define each page
-    Page(page: $page perPage: 10) {
+    Page(page:$page) {
       pageInfo{
         hasNextPage
       }
@@ -155,14 +155,16 @@ function getStaff(GuzzleHttp\Client $http): array
       array_push($staffs, $staff);
     }
     $currentPage++;
-    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+    $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
 
     if ($index_request == 90) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
+    }else{
+      $index_request++;
     }
-    $index_request++;
-  } while ($currentPage <= 5);
+
+  } while ($hasNextPage);
 
 
   return $staffs;
@@ -172,9 +174,8 @@ function getMedias(GuzzleHttp\Client $http): array
 {
   $query = '
     query ($page: Int){
-      Page(page:$page perPage:10){
+      Page(page:$page){
       pageInfo{
-        perPage
         hasNextPage
       }
         media{
@@ -321,14 +322,16 @@ function getMedias(GuzzleHttp\Client $http): array
       array_push($medias, $media);
     }
     $currentPage++;
-    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+    $hasNextPage = $raw_data_media['data']['Page']['pageInfo']['hasNextPage'];
 
     if ($index_request == 90) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
+    }else{
+
+      $index_request++;
     }
-    $index_request++;
-  } while ($currentPage <= 5);
+  } while ($hasNextPage);
 
   return $medias;
 }
@@ -337,7 +340,7 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
 {
   $query = '
     query ($page: Int) { # Define each page
-      Page(page:$page perPage:5) {
+      Page(page:$page) {
         pageInfo{
           hasNextPage
         }
@@ -393,14 +396,15 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
       }
     }
     $currentPage++;
-    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+    $hasNextPage = $raw_data_persons['data']['Page']['pageInfo']['hasNextPage'];
 
     if ($index_request == 90) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
+    } else {
+      $index_request++;
     }
-    $index_request++;
-  } while ($currentPage <= 5);
+  } while ($hasNextPage);
 
   return $person_dubs_character;
 }
@@ -409,6 +413,9 @@ function getMediaRelation(GuzzleHttp\Client $http): array
   $query = '
   query($page: Int){
     Page(page: $page) {
+      pageInfo{
+        hasNextPage
+      }
       media {
         id
         relations {
@@ -469,14 +476,15 @@ function getMediaRelation(GuzzleHttp\Client $http): array
 
 
     $currentPage++;
-    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+    $hasNextPage = $raw_media_relations['data']['Page']['pageInfo']['hasNextPage'];
 
     if ($index_request == 90) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
+    }else{
+      $index_request++;
     }
-    $index_request++;
-  } while ($currentPage < 2);
+  } while ($hasNextPage);
 
   return $medias_related_to;
 }
@@ -485,7 +493,7 @@ function getCharacter(GuzzleHttp\Client $http): array
 {
   $query = '
   query ($page: Int) { # Define each page
-    Page(page:$page perPage:10) {
+    Page(page:$page) {
       pageInfo{
         hasNextPage
       }
@@ -594,14 +602,16 @@ function getCharacter(GuzzleHttp\Client $http): array
       array_push($characters, $character);
     }
     $currentPage++;
-    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+    $hasNextPage = $raw_data_characters['data']['Page']['pageInfo']['hasNextPage'];
 
     if ($index_request == 90) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
+    } else {
+      $index_request++;
     }
-    $index_request++;
-  } while ($currentPage <= 5);
+
+  } while ($hasNextPage);
 
 
   return $characters;
@@ -612,6 +622,9 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
   $query = '
   query ($page: Int) {
   Page(page: $page) {
+    pageInfo{
+      hasNextPage
+    }
     staff {
       id
       staffMedia {
@@ -664,14 +677,16 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
       }
     }
     $currentPage++;
-    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+    $hasNextPage = $raw_works_in['data']['Page']['pageInfo']['hasNextPage'];
 
     if ($index_request == 90) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
+    }else {
+      $index_request++;
     }
-    $index_request++;
-  } while ($currentPage < 2);
+
+  } while ($hasNextPage);
 
   return $people_works_in;
 }
@@ -679,7 +694,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
 function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
   $query = '
   query ($page: Int) { # Define each page
-    Page(page:$page perPage:10) {
+    Page(page:$page) {
       pageInfo{
         hasNextPage
       }
@@ -739,20 +754,20 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
 
         array_push($charactersAppearsIn, $characterAppearsIn);
       }
-      //$role         = $value['media']['edges']['characterRole'];
 
     
     }
     $currentPage++;
-    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+    $hasNextPage = $raw_data_charactersAppearsIn['data']['Page']['pageInfo']['hasNextPage'];
 
     if ($index_request == 90) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
+    }else {
+      $index_request++;
     }
-    $index_request++;
 
-  } while ($currentPage <= 5);
+  } while ($hasNextPage);
 
 
   return $charactersAppearsIn;
@@ -767,6 +782,8 @@ function insertStaffs(PDO $db, array $staffs)
   $insert_sql_str = <<<END
     INSERT INTO people (id, name, romaji, gender, date_of_birth, date_of_death, age, years_active, home_town, blood_type, description, image_large, image_medium)
     VALUES (:id, :name, :romaji, :gender, :date_of_birth, :date_of_death, :age, :years_active, :home_town, :blood_type, :description, :image_large, :image_medium)
+    ON DUPLICATE KEY UPDATE id=:id, name=:name, romaji=:romaji, gender=:gender, date_of_birth=:date_of_birth, date_of_death=:date_of_death, age=:age, years_active=:years_active, home_town=:home_town, blood_type=:blood_type, description=:description, image_large=:image_large, image_medium=:image_medium
+
   END;
 
   $insert_statement = $db->prepare($insert_sql_str);
@@ -774,7 +791,6 @@ function insertStaffs(PDO $db, array $staffs)
 
   //foreach ($data as $row) {
   foreach ($staffs as $staff) {
-    try {
       $insert_statement->execute([
         ':id'             => $staff['id'],
         ':name'           => $staff['name'],
@@ -790,9 +806,7 @@ function insertStaffs(PDO $db, array $staffs)
         ':image_large'    => $staff['image_large'],
         ':image_medium'   => $staff['image_medium'],
       ]);
-    } catch (PDOException $e) {
-      echo "id repetido ??????";
-    }
+
   }
 }
 
@@ -800,7 +814,7 @@ function insertMedias(PDO $db, array $medias): void
 {
   $insert_sql_str = <<<END
     INSERT INTO medias (id, title, description, extra_large_banner_image, large_banner_image, medium_banner_image, format, episodes, chapters, airing_status, start_date, end_date, season, season_year, studios, source, genres, romaji, native, trailer, tags, external_link, type)
-    VALUES (:id, :title, :description, :extra_large_banner_image, :large_banner_image, :medium_banner_image, :format, :episodes, :chapters, :airing_status, :start_date, :end_date, :season, :season_year, :studios, :source, :genres, :romaji, :native, :trailer, :tags, :external_link, :type)
+    VALUES (:id, :title, :description, :extra_large_banner_image, :large_banner_image, :medium_banner_image, :format, :episodes, :chapters, :airing_status, :start_date, :end_date, :season, :season_year, :studios, :source, :genres, :romaji, :native, :trailer, :tags, :external_link, :type) ON DUPLICATE KEY UPDATE id=:id, title=:title, description=:description, extra_large_banner_image=:extra_large_banner_image, large_banner_image=:large_banner_image, medium_banner_image=:medium_banner_image, format=:format, episodes=:episodes, chapters=:chapters, chapters=:chapters, airing_status=:airing_status, start_date=:start_date, end_date=:end_date, season=:season, season_year=:season_year, studios=:studios, source=:source, genres=:genres, romaji=:romaji, native=:native, trailer=:trailer, tags=:tags, external_link=:external_link, type=:type
   END;
 
   $insert_statement = $db->prepare($insert_sql_str);
@@ -857,7 +871,7 @@ function insertCharacters(PDO $db, array $characters)
 {
   $insert_sql_str = <<<END
     INSERT INTO characters (id, name, romaji, gender, birthday, age, blood_type, description, image_large, image_medium)
-    VALUES (:id, :name, :romaji, :gender, :birthday, :age, :blood_type, :description, :image_large, :image_medium)
+    VALUES (:id, :name, :romaji, :gender, :birthday, :age, :blood_type, :description, :image_large, :image_medium) ON DUPLICATE KEY UPDATE id=:id, name=:name, romaji=:romaji, gender=:gender, birthday=:birthday, age=:age, blood_type=:blood_type, description=:description, image_large=:image_large, image_medium=:image_medium
   END;
 
   $insert_statement = $db->prepare($insert_sql_str);
@@ -940,7 +954,7 @@ function main()
   #Credentials
   $servername = '127.0.0.1';
   $username = 'root';
-  $password = '123456789';
+  $password = 'myroot';
   $dbname = 'onilist';
   #Create conection
   $db = connectToDB($servername, $username, $password, $dbname);
@@ -951,15 +965,15 @@ function main()
 
   #Staff insertion
   $staff_array_data = getStaff($http);
-  //insertStaffs($db, $staff_array_data);
+  insertStaffs($db, $staff_array_data);
 
   #Media insertion
-  //$media_array_data = getMedias($http);
-  //insertMedias($db, $media_array_data);
+  $media_array_data = getMedias($http);
+  insertMedias($db, $media_array_data);
 
   #Character insertion
-  //$character_array_data = getCharacter($http);
-  //insertCharacters($db, $character_array_data);
+  $character_array_data = getCharacter($http);
+  insertCharacters($db, $character_array_data);
 
   #character_appears_in insertion
   $characterAppearsIn_array_data = getCharacterAppearsIn($http);
@@ -970,13 +984,15 @@ function main()
   insertPersonDubCharacter($db, $person_dub_character_array);
 
   #related_to insertion
-  //$medias_relations = getMediaRelation($http);
-  //insertMediaRelations($db, $medias_relations);
+  $medias_relations = getMediaRelation($http);
+  insertMediaRelations($db, $medias_relations);
 
   #works_in insertion
   //Sleep de 60 segundos por cada tabla
   $people_works_in = getPeopleWorksIn($http);
   insertPeopleWorksIn($db, $people_works_in);
+
+  //!USE REPLACE FOR RELATIONS TABLE FOR DO NOT DUPLICATE RECORDS WHEN CRON RUNS
 
   //  echo count($staff_array_data);
   echo "script finalizado";
