@@ -89,13 +89,28 @@ function getStaff(GuzzleHttp\Client $http): array
       "page" => $currentPage
     ];
 
+    try {
 
-    $response = $http->post('https://graphql.anilist.co', [
-      'json' => [
-        'query' => $query,
-        'variables' => $variables,
-      ]
-    ]);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    } catch (Exception $e) {
+      echo 'exception...';
+      sleep(60);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    }
+
+
 
     $raw_data_staffs = json_decode((string) $response->getBody(), true);
 
@@ -159,7 +174,7 @@ function getStaff(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 1) { //Si el numero de peticion es el 90
+    if ($remain == 35) { //Si el numero de peticion es el 90
       echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
     }
@@ -241,13 +256,26 @@ function getMedias(GuzzleHttp\Client $http): array
       "page" => $currentPage
     ];
 
+    try {
 
-    $response = $http->post('https://graphql.anilist.co', [
-      'json' => [
-        'query' => $query,
-        'variables' => $variables,
-      ]
-    ]);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    } catch (Exception $e) {
+      echo 'exception...';
+      sleep(60);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    }
 
     $raw_data_media = json_decode((string) $response->getBody(), true);
 
@@ -326,7 +354,7 @@ function getMedias(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_media['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 1) { //Si el numero de peticion es el 90
+    if ($remain == 35) { //Si el numero de peticion es el 90
       echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
     }
@@ -372,12 +400,26 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
       "page" => $currentPage
     ];
 
-    $response = $http->post('https://graphql.anilist.co', [
-      'json' => [
-        'query' => $query,
-        'variables' => $variables,
-      ]
-    ]);
+    try {
+
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    } catch (Exception $e) {
+      echo 'exception...';
+      sleep(60);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    }
 
     $raw_data_persons = json_decode((string) $response->getBody(), true);
 
@@ -400,7 +442,7 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_persons['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 1) { //Si el numero de peticion es el 90
+    if ($remain == 35) { //Si el numero de peticion es el 90
       echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
     }
@@ -445,12 +487,26 @@ function getMediaRelation(GuzzleHttp\Client $http): array
       "page" => $currentPage
     ];
 
-    $response = $http->post('https://graphql.anilist.co', [
-      'json' => [
-        'query' => $query,
-        'variables' => $variables,
-      ]
-    ]);
+    try {
+
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    } catch (Exception $e) {
+      echo 'exception...';
+      sleep(60);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    }
 
     $raw_media_relations = json_decode((string) $response->getBody(), true);
 
@@ -480,7 +536,7 @@ function getMediaRelation(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_media_relations['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 1) { //Si el numero de peticion es el 90
+    if ($remain == 35) { //Si el numero de peticion es el 90
       echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
     }
@@ -539,12 +595,26 @@ function getCharacter(GuzzleHttp\Client $http): array
       "page" => $currentPage
     ];
 
-    $response = $http->post('https://graphql.anilist.co', [
-      'json' => [
-        'query' => $query,
-        'variables' => $variables,
-      ]
-    ]);
+    try {
+
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    } catch (Exception $e) {
+      echo 'exception...';
+      sleep(60);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    }
 
     $raw_data_characters = json_decode((string) $response->getBody(), true);
 
@@ -607,7 +677,7 @@ function getCharacter(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_characters['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 1) { //Si el numero de peticion es el 90
+    if ($remain == 35) { //Si el numero de peticion es el 90
       echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
     }
@@ -653,12 +723,26 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
       "page" => $currentPage
     ];
 
-    $response = $http->post('https://graphql.anilist.co', [
-      'json' => [
-        'query' => $query,
-        'variables' => $variables,
-      ]
-    ]);
+    try {
+
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    } catch (Exception $e) {
+      echo 'exception...';
+      sleep(60);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    }
 
     $raw_works_in = json_decode((string) $response->getBody(), true);
     $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
@@ -680,7 +764,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_works_in['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 1) { //Si el numero de peticion es el 90
+    if ($remain == 35) { //Si el numero de peticion es el 90
       echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
     }
@@ -728,12 +812,26 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
       "page" => $currentPage
     ];
 
-    $response = $http->post('https://graphql.anilist.co', [
-      'json' => [
-        'query' => $query,
-        'variables' => $variables,
-      ]
-    ]);
+    try {
+
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    } catch (Exception $e) {
+      echo 'exception...';
+      sleep(60);
+      $response = $http->post('https://graphql.anilist.co', [
+        'json' => [
+          'query' => $query,
+          'variables' => $variables,
+        ]
+      ]);
+
+    }
 
     $raw_data_charactersAppearsIn = json_decode((string) $response->getBody(), true);
 
@@ -761,7 +859,7 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
     $currentPage++;
     $hasNextPage = $raw_data_charactersAppearsIn['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 1) { //Si el numero de peticion es el 90
+    if ($remain == 35) { //Si el numero de peticion es el 90
       echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
     }
