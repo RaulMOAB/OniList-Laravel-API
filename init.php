@@ -676,6 +676,88 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
   return $people_works_in;
 }
 
+function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
+  $query = '
+  query ($page: Int) { # Define each page
+    Page(page:$page perPage:10) {
+      pageInfo{
+        hasNextPage
+      }
+      characters{
+        id
+        media{
+          edges{
+            node{
+              id
+            }
+            characterRole
+          }
+        }
+      }
+    }
+  }
+  ';
+
+  // Define our query variables and values that will be used in the query request
+  $variables = [
+    "page" => 1
+  ];
+
+  $charactersAppearsIn = [];
+
+  $hasNextPage = true;
+  $currentPage = 1;
+  $index_request = 0;
+
+  do {
+    $variables = [
+      "page" => $currentPage
+    ];
+
+    $response = $http->post('https://graphql.anilist.co', [
+      'json' => [
+        'query' => $query,
+        'variables' => $variables,
+      ]
+    ]);
+
+    $raw_data_charactersAppearsIn = json_decode((string) $response->getBody(), true);
+
+    $raw_charactersAppearsIn = $raw_data_charactersAppearsIn['data']['Page']['characters'];
+    foreach ($raw_charactersAppearsIn as $value) {
+      
+      $character_id    = $value['id'];
+      $media_ids        = $value['media']['edges'];
+
+      foreach($media_ids as $media_id){
+
+        $characterAppearsIn = [
+          'character_id'  => $character_id,
+          'media_id'      => $media_id['node']['id'],
+          'role'          => $media_id['characterRole'],
+        ];
+
+        array_push($charactersAppearsIn, $characterAppearsIn);
+      }
+      //$role         = $value['media']['edges']['characterRole'];
+
+    
+    }
+    $currentPage++;
+    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+
+    if ($index_request == 90) { //Si el numero de peticion es el 90
+      $index_request = 0; //reset de la variable
+      sleep(60); //Se parara durante 60 segundos
+    }
+    $index_request++;
+
+  } while ($currentPage <= 5);
+
+
+  return $charactersAppearsIn;
+}
+
 
 ################################################
 #         INSERTS DATA FUNCTIONS
@@ -834,6 +916,24 @@ function insertPeopleWorksIn(PDO $db, array $people_works_in)
   }
 }
 
+function insertCharacterAppearsIn(PDO $db, array $characters){
+  $insert_sql_str = <<<END
+    INSERT INTO characters_appears_in (media_id, character_id, role)
+    VALUES (:media_id, :character_id, :role)
+  END;
+
+  $insert_statement = $db->prepare($insert_sql_str);
+
+  //foreach ($data as $row) {
+    foreach ($characters as $character) {
+      $insert_statement->execute([
+        ':media_id' => $character['media_id'],
+        ':character_id' => $character['character_id'],
+        ':role' => $character['role'],
+      ]);
+    }
+}
+
 
 function main()
 {
@@ -862,7 +962,8 @@ function main()
   //insertCharacters($db, $character_array_data);
 
   #character_appears_in insertion
-
+  $characterAppearsIn_array_data = getCharacterAppearsIn($http);
+  insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
 
   #person_dubs_character insertion
   $person_dub_character_array = getPersonDubCharacter($http);

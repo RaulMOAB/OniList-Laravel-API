@@ -17,7 +17,15 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->foreignId('character_id')
                 ->cascadeOnDelete();
+            $table->string('role');
             $table->timestamps();
+
+            $table->foreign('media_id')->references('id')
+                ->on('medias')
+                ->cascadeOnDelete();
+            $table->foreign('character_id')->references('id')
+                ->on('characters')
+                ->cascadeOnDelete();
         });
     }
 
