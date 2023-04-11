@@ -333,6 +333,79 @@ function getMedias(GuzzleHttp\Client $http): array
   return $medias;
 }
 
+function getPersonDubCharacter(GuzzleHttp\Client $http): array
+{
+  $query = '
+    query ($page: Int) { # Define each page
+      Page(page:$page perPage:5) {
+        pageInfo{
+          hasNextPage
+        }
+        staff{
+          id
+          characters{
+            nodes{
+              id
+            }
+          }
+        }
+      }
+    }
+  ';
+
+  // Define our query variables and values that will be used in the query request
+  $variables = [
+    "page" => 1
+  ];
+
+  $person_dubs_character = [];
+
+  $hasNextPage = true;
+  $currentPage = 1;
+  $index_request = 0;
+
+  do {
+    $variables = [
+      "page" => $currentPage
+    ];
+
+    $response = $http->post('https://graphql.anilist.co', [
+      'json' => [
+        'query' => $query,
+        'variables' => $variables,
+      ]
+    ]);
+
+    $raw_data_persons = json_decode((string) $response->getBody(), true);
+
+    $raw_persons = $raw_data_persons['data']['Page']['staff'];
+    foreach ($raw_persons as $value) {
+
+      $person_id = $value['id'];
+      $characters_ids = $value['characters']['nodes'];
+
+      foreach ($characters_ids as $character_id) {
+        $character = [
+          'people_id' => $person_id,
+          'character_id' => $character_id['id']
+        ];
+        array_push($person_dubs_character, $character);
+      }
+    }
+    $currentPage++;
+    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+
+    if ($index_request == 90) { //Si el numero de peticion es el 90
+      $index_request = 0; //reset de la variable
+      sleep(60); //Se parara durante 60 segundos
+    }
+    $index_request++;
+
+  } while ($currentPage <= 5);
+
+  return $person_dubs_character;
+
+}
 function getMediaRelation(GuzzleHttp\Client $http): array
 {
   $query = '
@@ -658,13 +731,32 @@ function insertCharacters(PDO $db, array $characters)
   }
 }
 
+function insertPersonDubCharacter(PDO $db, array $persons_dub_array)
+{
+  $insert_sql_str = <<<END
+    INSERT INTO person_dubs_character (people_id, character_id)
+    VALUES (:people_id, :character_id)
+  END;
+
+  $insert_statement = $db->prepare($insert_sql_str);
+
+
+  //foreach ($data as $row) {
+  foreach ($persons_dub_array as $person_dub) {
+    $insert_statement->execute([
+      ':people_id' => $person_dub['people_id'],
+      ':character_id' => $person_dub['character_id'],
+    ]);
+  }
+}
+
 
 function main()
 {
   #Credentials
   $servername = '127.0.0.1';
   $username = 'root';
-  $password = '123456789';
+  $password = 'myroot';
   $dbname = 'onilist';
   #Create conection
   $db = connectToDB($servername, $username, $password, $dbname);
@@ -678,8 +770,8 @@ function main()
   //insertStaffs($db, $staff_array_data);
 
   #Media insertion
-  $media_array_data = getMedias($http);
-  insertMedias($db, $media_array_data);
+  //$media_array_data = getMedias($http);
+  //insertMedias($db, $media_array_data);
 
   #Character insertion
   //$character_array_data = getCharacter($http);
@@ -689,11 +781,12 @@ function main()
 
 
   #person_dubs_character insertion
-
+  $person_dub_character_array = getPersonDubCharacter($http);
+  insertPersonDubCharacter($db, $person_dub_character_array);
 
   #related_to insertion
-  $medias_relations = getMediaRelation($http);
-  insertMediaRelations($db, $medias_relations);
+  //$medias_relations = getMediaRelation($http);
+  //insertMediaRelations($db, $medias_relations);
 
   #works_in insertion
   //Sleep de 60 segundos por cada tabla
