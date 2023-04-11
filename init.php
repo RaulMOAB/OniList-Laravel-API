@@ -400,11 +400,9 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
       sleep(60); //Se parara durante 60 segundos
     }
     $index_request++;
-
   } while ($currentPage <= 5);
 
   return $person_dubs_character;
-
 }
 function getMediaRelation(GuzzleHttp\Client $http): array
 {
@@ -609,6 +607,75 @@ function getCharacter(GuzzleHttp\Client $http): array
   return $characters;
 }
 
+function getPeopleWorksIn(GuzzleHttp\Client $http): array
+{
+  $query = '
+  query ($page: Int) {
+  Page(page: $page) {
+    staff {
+      id
+      staffMedia {
+        nodes {
+          id
+        }
+      }
+    }
+  }
+  ';
+
+  // Define our query variables and values that will be used in the query request
+  $variables = [
+    "page" => 1
+  ];
+
+  $people_works_in = [];
+
+  $hasNextPage = true;
+  $currentPage = 1;
+  $index_request = 0;
+
+  do {
+    $variables = [
+      "page" => $currentPage
+    ];
+
+    $response = $http->post('https://graphql.anilist.co', [
+      'json' => [
+        'query' => $query,
+        'variables' => $variables,
+      ]
+    ]);
+
+    $raw_works_in = json_decode((string) $response->getBody(), true);
+
+    $raw_people_works_in = $raw_works_in['data']['Page']['staff'];
+
+    foreach ($raw_people_works_in as $value) {
+      $id = $value['id'];
+      $staff_media_id = $value['staffMedia']['nodes'];
+      foreach ($staff_media_id as $value) {
+        $media_id = $value['id'];
+        $staff_media_relation = [
+          'person_id' => $id,
+          'media_id' => $media_id
+        ];
+
+        array_push($people_works_in, $staff_media_relation);
+      }
+    }
+    $currentPage++;
+    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+
+    if ($index_request == 90) { //Si el numero de peticion es el 90
+      $index_request = 0; //reset de la variable
+      sleep(60); //Se parara durante 60 segundos
+    }
+    $index_request++;
+  } while ($currentPage < 2);
+
+  return $people_works_in;
+}
+
 
 ################################################
 #         INSERTS DATA FUNCTIONS
@@ -750,13 +817,30 @@ function insertPersonDubCharacter(PDO $db, array $persons_dub_array)
   }
 }
 
+function insertPeopleWorksIn(PDO $db, array $people_works_in)
+{
+  $insert_sql_str = <<<END
+    INSERT INTO works_in (person_id, media_id)
+    VALUES (:person_id, :media_id)
+  END;
+
+  $insert_statement = $db->prepare($insert_sql_str);
+
+  foreach ($people_works_in as $value) {
+    $insert_statement->execute([
+      ':person_id' => $value['person_id'],
+      ':media_id' => $value['media_id']
+    ]);
+  }
+}
+
 
 function main()
 {
   #Credentials
   $servername = '127.0.0.1';
   $username = 'root';
-  $password = 'myroot';
+  $password = '123456789';
   $dbname = 'onilist';
   #Create conection
   $db = connectToDB($servername, $username, $password, $dbname);
@@ -790,7 +874,8 @@ function main()
 
   #works_in insertion
   //Sleep de 60 segundos por cada tabla
-
+  $people_works_in = getPeopleWorksIn($http);
+  insertPeopleWorksIn($db, $people_works_in);
 
   //  echo count($staff_array_data);
   echo "script finalizado";

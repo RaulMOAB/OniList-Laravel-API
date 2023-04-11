@@ -16,8 +16,16 @@ return new class extends Migration
             $table->foreignId('person_id')
                 ->cascadeOnDelete();
             $table->foreignId('media_id')
-                ->cascadeOnDelete(); 
+                ->cascadeOnDelete();
             $table->timestamps();
+
+
+            $table->foreign('person_id')->references('id')
+                ->on('people')
+                ->cascadeOnDelete();
+            $table->foreign('media_id')->references('id')
+                ->on('medias')
+                ->cascadeOnDelete();
         });
     }
 
