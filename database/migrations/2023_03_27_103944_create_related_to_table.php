@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('related_to', function (Blueprint $table) {
             $table->id();
             $table->foreignId('media_id')
+                ->nullable()
                 ->cascadeOnDelete();
             $table->foreignId('related_media_id')
                 ->cascadeonDelete();

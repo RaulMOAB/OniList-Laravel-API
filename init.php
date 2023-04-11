@@ -9,8 +9,9 @@ use App\Http\Controllers\GuzzleHttp\Client;
 use \PDO as PDO;
 use PDOException;
 
-function connectToDB(string $servername, string $username, string $password, string $dbname): PDO{
-  // Conexión a MySql
+function connectToDB(string $servername, string $username, string $password, string $dbname): PDO
+{
+  // MySql Connection
   try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -21,7 +22,8 @@ function connectToDB(string $servername, string $username, string $password, str
   }
 }
 
-function getJsonValues($data_json):string{
+function getJsonValues($data_json): string
+{
   $value = array_values($data_json);
   return $value[0];
 }
@@ -29,7 +31,8 @@ function getJsonValues($data_json):string{
 ################################################
 #         GET DATA FUNCTIONS
 ################################################
-function getStaff(GuzzleHttp\Client $http): array{
+function getStaff(GuzzleHttp\Client $http): array
+{
   $query = '
   query ($page: Int) { # Define each page
     Page(page: $page perPage: 10) {
@@ -73,29 +76,29 @@ function getStaff(GuzzleHttp\Client $http): array{
   ';
 
   // Define our query variables and values that will be used in the query request
-  
+
 
   $staffs = [];
-  
+
   $hasNextPage = true;
   $currentPage = 1;
-  $index_request = 0 ;
+  $index_request = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
 
-    
+
     $response = $http->post('https://graphql.anilist.co', [
       'json' => [
         'query' => $query,
         'variables' => $variables,
-        ]
-      ]);
+      ]
+    ]);
 
     $raw_data_staffs = json_decode((string) $response->getBody(), true);
-    
+
     $raw_staffs = $raw_data_staffs['data']['Page']['staff'];
     foreach ($raw_staffs as $value) {
 
@@ -114,8 +117,8 @@ function getStaff(GuzzleHttp\Client $http): array{
       //yearsActive
       $active = null;
       $yearsArray = $value['yearsActive'];
-      if(!empty($yearsArray)){
-        $active = count($yearsArray)==2 ? $yearsArray[0].'-'.$yearsArray[1] : $yearsArray[0].'-'.'Present';
+      if (!empty($yearsArray)) {
+        $active = count($yearsArray) == 2 ? $yearsArray[0] . '-' . $yearsArray[1] : $yearsArray[0] . '-' . 'Present';
       }
 
 
@@ -150,24 +153,23 @@ function getStaff(GuzzleHttp\Client $http): array{
       ];
 
       array_push($staffs, $staff);
-
     }
     $currentPage++;
     //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
-    
-    if($index_request == 90){//Si el numero de peticion es el 90
-      $index_request = 0;//reset de la variable
+
+    if ($index_request == 90) { //Si el numero de peticion es el 90
+      $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
     }
     $index_request++;
-
-  } while ($currentPage<=10);
+  } while ($currentPage <= 5);
 
 
   return $staffs;
 }
 
-function getMedias(GuzzleHttp\Client $http):array{
+function getMedias(GuzzleHttp\Client $http): array
+{
   $query = '
     query ($page: Int){
       Page(page:$page perPage:10){
@@ -281,13 +283,13 @@ function getMedias(GuzzleHttp\Client $http):array{
       $season = $value['season'];
       $season_year = $value['seasonYear'];
       $studios = array_map('getJsonValues', $value['studios']['nodes']); //!Accede a um array nulo
-      $source =$value['source'];
+      $source = $value['source'];
       $genres = $value['genres'];
       $romaji = $value['title']['romaji'];
       $native = $value['title']['native'];
       $trailer = $value['trailer'];
       $tags = array_map('getJsonValues', $value['tags']);
-      $external_link = array_map('getJsonValues',$value['externalLinks']);
+      $external_link = array_map('getJsonValues', $value['externalLinks']);
       $type = $value['type'];
 
       $media = [
@@ -302,7 +304,7 @@ function getMedias(GuzzleHttp\Client $http):array{
         'chapters'                 => $chapters,
         'airing_status'            => $airing_status,
         'start_date'               => date('Y-m-d', $start_date), //string
-        'end_date'                 => $end_date? date('Y-m-d', $end_date) : null, //string
+        'end_date'                 => $end_date ? date('Y-m-d', $end_date) : null, //string
         'season'                   => $season,
         'season_year'              => $season_year,
         'studios'                  => json_encode($studios),
@@ -317,7 +319,6 @@ function getMedias(GuzzleHttp\Client $http):array{
       ];
 
       array_push($medias, $media);
-
     }
     $currentPage++;
     //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
@@ -327,14 +328,90 @@ function getMedias(GuzzleHttp\Client $http):array{
       sleep(60); //Se parara durante 60 segundos
     }
     $index_request++;
-
-  } while ($currentPage <= 10);
+  } while ($currentPage <= 5);
 
   return $medias;
-
 }
 
-function getCharacter(GuzzleHttp\Client $http): array{
+function getMediaRelation(GuzzleHttp\Client $http): array
+{
+  $query = '
+  query($page: Int){
+    Page(page: $page) {
+      media {
+        id
+        relations {
+          nodes {
+            id
+            source
+          }
+        }
+      }
+    }
+  }
+  ';
+
+  $medias_related_to = [];
+
+  // Define our query variables and values that will be used in the query request
+  $variables = [
+    "page" => 1
+  ];
+
+  $hasNextPage = true;
+  $currentPage = 1;
+  $index_request = 0;
+
+  do {
+    $variables = [
+      "page" => $currentPage
+    ];
+
+    $response = $http->post('https://graphql.anilist.co', [
+      'json' => [
+        'query' => $query,
+        'variables' => $variables,
+      ]
+    ]);
+
+    $raw_media_relations = json_decode((string) $response->getBody(), true);
+
+    $raw_relations = $raw_media_relations['data']['Page']['media'];
+
+    foreach ($raw_relations as $value) {
+      //Build data to insert
+      $id = $value['id'];
+      $relations = $value['relations']['nodes'];
+
+      foreach ($relations as $value) {
+        $relation_id = $value['id'];
+        $source = $value['source'];
+        $relation = [
+          'media_id' => $id,
+          'related_media_id' => $relation_id,
+          'relationship_type' => $source
+        ];
+        array_push($medias_related_to, $relation);
+        var_dump($relation);
+      }
+    }
+
+
+    $currentPage++;
+    //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
+
+    if ($index_request == 90) { //Si el numero de peticion es el 90
+      $index_request = 0; //reset de la variable
+      sleep(60); //Se parara durante 60 segundos
+    }
+    $index_request++;
+  } while ($currentPage < 2);
+
+  return $medias_related_to;
+}
+
+function getCharacter(GuzzleHttp\Client $http): array
+{
   $query = '
   query ($page: Int) { # Define each page
     Page(page:$page perPage:10) {
@@ -414,8 +491,8 @@ function getCharacter(GuzzleHttp\Client $http): array{
       $birth_day_date = $birth_date['day'];
       $birth = null;
 
-      if($birth_month_date){
-        $birth = $months[$birth_month_date - 1] . ' '. $birth_day_date;
+      if ($birth_month_date) {
+        $birth = $months[$birth_month_date - 1] . ' ' . $birth_day_date;
       }
 
 
@@ -444,7 +521,6 @@ function getCharacter(GuzzleHttp\Client $http): array{
       ];
 
       array_push($characters, $character);
-
     }
     $currentPage++;
     //$hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage']; de momento no
@@ -454,8 +530,7 @@ function getCharacter(GuzzleHttp\Client $http): array{
       sleep(60); //Se parara durante 60 segundos
     }
     $index_request++;
-
-  } while ($currentPage <= 10);
+  } while ($currentPage <= 5);
 
 
   return $characters;
@@ -465,7 +540,8 @@ function getCharacter(GuzzleHttp\Client $http): array{
 ################################################
 #         INSERTS DATA FUNCTIONS
 ################################################
-function insertStaffs(PDO $db,array $staffs){
+function insertStaffs(PDO $db, array $staffs)
+{
   $insert_sql_str = <<<END
     INSERT INTO people (id, name, romaji, gender, date_of_birth, date_of_death, age, years_active, home_town, blood_type, description, image_large, image_medium)
     VALUES (:id, :name, :romaji, :gender, :date_of_birth, :date_of_death, :age, :years_active, :home_town, :blood_type, :description, :image_large, :image_medium)
@@ -475,7 +551,7 @@ function insertStaffs(PDO $db,array $staffs){
 
 
   //foreach ($data as $row) {
-  foreach ($staffs as $staff) {     
+  foreach ($staffs as $staff) {
     try {
       $insert_statement->execute([
         ':id'             => $staff['id'],
@@ -494,12 +570,12 @@ function insertStaffs(PDO $db,array $staffs){
       ]);
     } catch (PDOException $e) {
       echo "id repetido ??????";
-    } 
+    }
   }
-
 }
 
-function insertMedias(PDO $db, array $medias): void{
+function insertMedias(PDO $db, array $medias): void
+{
   $insert_sql_str = <<<END
     INSERT INTO medias (id, title, description, extra_large_banner_image, large_banner_image, medium_banner_image, format, episodes, chapters, airing_status, start_date, end_date, season, season_year, studios, source, genres, romaji, native, trailer, tags, external_link, type)
     VALUES (:id, :title, :description, :extra_large_banner_image, :large_banner_image, :medium_banner_image, :format, :episodes, :chapters, :airing_status, :start_date, :end_date, :season, :season_year, :studios, :source, :genres, :romaji, :native, :trailer, :tags, :external_link, :type)
@@ -537,7 +613,26 @@ function insertMedias(PDO $db, array $medias): void{
   }
 }
 
-function insertCharacters(PDO $db, array $characters){
+function insertMediaRelations(PDO $db, array $medias_relations)
+{
+  $insert_sql_str = <<<END
+    INSERT INTO related_to (media_id, related_media_id, relationship_type)
+    VALUES (:media_id, :related_media_id, :relationship_type)
+  END;
+
+  $insert_statement = $db->prepare($insert_sql_str);
+
+  foreach ($medias_relations as $media) {
+    $insert_statement->execute([
+      ':media_id' => $media['media_id'],
+      ':related_media_id' => $media['related_media_id'],
+      ':relationship_type' => $media['relationship_type']
+    ]);
+  }
+}
+
+function insertCharacters(PDO $db, array $characters)
+{
   $insert_sql_str = <<<END
     INSERT INTO characters (id, name, romaji, gender, birthday, age, blood_type, description, image_large, image_medium)
     VALUES (:id, :name, :romaji, :gender, :birthday, :age, :blood_type, :description, :image_large, :image_medium)
@@ -569,7 +664,7 @@ function main()
   #Credentials
   $servername = '127.0.0.1';
   $username = 'root';
-  $password = 'myroot';
+  $password = '123456789';
   $dbname = 'onilist';
   #Create conection
   $db = connectToDB($servername, $username, $password, $dbname);
@@ -580,15 +675,15 @@ function main()
 
   #Staff insertion
   $staff_array_data = getStaff($http);
-  insertStaffs($db, $staff_array_data);
+  //insertStaffs($db, $staff_array_data);
 
   #Media insertion
   $media_array_data = getMedias($http);
   insertMedias($db, $media_array_data);
 
   #Character insertion
-  $character_array_data = getCharacter($http);
-  insertCharacters($db,$character_array_data);
+  //$character_array_data = getCharacter($http);
+  //insertCharacters($db, $character_array_data);
 
   #character_appears_in insertion
 
@@ -597,15 +692,15 @@ function main()
 
 
   #related_to insertion
-
+  $medias_relations = getMediaRelation($http);
+  insertMediaRelations($db, $medias_relations);
 
   #works_in insertion
   //Sleep de 60 segundos por cada tabla
-  
 
-//  echo count($staff_array_data);
+
+  //  echo count($staff_array_data);
   echo "script finalizado";
-
 }
 
 main();
