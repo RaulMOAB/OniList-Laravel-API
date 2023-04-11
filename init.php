@@ -157,12 +157,13 @@ function getStaff(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 90) { //Si el numero de peticion es el 90
+    if ($index_request == 80) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
-      sleep(60); //Se parara durante 60 segundos
+      sleep(61); //Se parara durante 60 segundos
     }else{
       $index_request++;
     }
+    echo $index_request;
 
   } while ($hasNextPage);
 
@@ -324,7 +325,7 @@ function getMedias(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_media['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 90) { //Si el numero de peticion es el 90
+    if ($index_request == 80) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
       sleep(60); //Se parara durante 60 segundos
     }else{
@@ -398,9 +399,9 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_persons['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 90) { //Si el numero de peticion es el 90
+    if ($index_request == 80) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
-      sleep(60); //Se parara durante 60 segundos
+      sleep(61); //Se parara durante 60 segundos
     } else {
       $index_request++;
     }
@@ -478,9 +479,9 @@ function getMediaRelation(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_media_relations['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 90) { //Si el numero de peticion es el 90
+    if ($index_request == 80) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
-      sleep(60); //Se parara durante 60 segundos
+      sleep(61); //Se parara durante 60 segundos
     }else{
       $index_request++;
     }
@@ -604,9 +605,9 @@ function getCharacter(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_characters['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 90) { //Si el numero de peticion es el 90
+    if ($index_request == 80) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
-      sleep(60); //Se parara durante 60 segundos
+      sleep(61); //Se parara durante 60 segundos
     } else {
       $index_request++;
     }
@@ -679,9 +680,9 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_works_in['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 90) { //Si el numero de peticion es el 90
+    if ($index_request == 80) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
-      sleep(60); //Se parara durante 60 segundos
+      sleep(61); //Se parara durante 60 segundos
     }else {
       $index_request++;
     }
@@ -760,9 +761,9 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
     $currentPage++;
     $hasNextPage = $raw_data_charactersAppearsIn['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 90) { //Si el numero de peticion es el 90
+    if ($index_request == 80) { //Si el numero de peticion es el 90
       $index_request = 0; //reset de la variable
-      sleep(60); //Se parara durante 60 segundos
+      sleep(61); //Se parara durante 60 segundos
     }else {
       $index_request++;
     }
@@ -964,34 +965,46 @@ function main()
   ###INSERTIONS###
 
   #Staff insertion
+  echo 'staff action';
   $staff_array_data = getStaff($http);
   insertStaffs($db, $staff_array_data);
-  sleep(60);
+  sleep(61);
 
+  echo 'media action';
   #Media insertion
   $media_array_data = getMedias($http);
   insertMedias($db, $media_array_data);
-  sleep(60);
+  sleep(61);
+
+  echo 'character action';
   #Character insertion
   $character_array_data = getCharacter($http);
   insertCharacters($db, $character_array_data);
-  sleep(60);
+  sleep(61);
+
+  echo 'appears_in action';
   #character_appears_in insertion
   $characterAppearsIn_array_data = getCharacterAppearsIn($http);
   insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
-  sleep(60);
+  sleep(61);
+
+  echo 'dubs action';
   #person_dubs_character insertion
   $person_dub_character_array = getPersonDubCharacter($http);
   insertPersonDubCharacter($db, $person_dub_character_array);
-  sleep(60);
+  sleep(61);
+
+  echo 'related_to action';
   #related_to insertion
   $medias_relations = getMediaRelation($http);
   insertMediaRelations($db, $medias_relations);
-  sleep(60);
+  sleep(61);
+
+  echo 'work_in action';
   #works_in insertion
   $people_works_in = getPeopleWorksIn($http);
   insertPeopleWorksIn($db, $people_works_in);
-  sleep(60);
+  sleep(61);
   //!USE REPLACE FOR RELATIONS TABLE FOR DO NOT DUPLICATE RECORDS WHEN CRON RUNS
 
   //  echo count($staff_array_data);
