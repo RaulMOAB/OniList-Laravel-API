@@ -966,32 +966,32 @@ function main()
   #Staff insertion
   $staff_array_data = getStaff($http);
   insertStaffs($db, $staff_array_data);
+  sleep(60);
 
   #Media insertion
   $media_array_data = getMedias($http);
   insertMedias($db, $media_array_data);
-
+  sleep(60);
   #Character insertion
   $character_array_data = getCharacter($http);
   insertCharacters($db, $character_array_data);
-
+  sleep(60);
   #character_appears_in insertion
   $characterAppearsIn_array_data = getCharacterAppearsIn($http);
   insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
-
+  sleep(60);
   #person_dubs_character insertion
   $person_dub_character_array = getPersonDubCharacter($http);
   insertPersonDubCharacter($db, $person_dub_character_array);
-
+  sleep(60);
   #related_to insertion
   $medias_relations = getMediaRelation($http);
   insertMediaRelations($db, $medias_relations);
-
+  sleep(60);
   #works_in insertion
-  //Sleep de 60 segundos por cada tabla
   $people_works_in = getPeopleWorksIn($http);
   insertPeopleWorksIn($db, $people_works_in);
-
+  sleep(60);
   //!USE REPLACE FOR RELATIONS TABLE FOR DO NOT DUPLICATE RECORDS WHEN CRON RUNS
 
   //  echo count($staff_array_data);
