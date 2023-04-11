@@ -82,7 +82,7 @@ function getStaff(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $index_request = 0;
+  $remain = 0;
 
   do {
     $variables = [
@@ -99,6 +99,8 @@ function getStaff(GuzzleHttp\Client $http): array
 
     $raw_data_staffs = json_decode((string) $response->getBody(), true);
 
+    $remain = (int)$response->getHeader('X-RateLimit-Remaining')[0];
+    echo $remain;
     $raw_staffs = $raw_data_staffs['data']['Page']['staff'];
     foreach ($raw_staffs as $value) {
 
@@ -157,13 +159,10 @@ function getStaff(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 80) { //Si el numero de peticion es el 90
-      $index_request = 0; //reset de la variable
+    if ($remain == 1) { //Si el numero de peticion es el 90
+      echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
-    }else{
-      $index_request++;
     }
-    echo $index_request;
 
   } while ($hasNextPage);
 
@@ -235,7 +234,7 @@ function getMedias(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $index_request = 0;
+  $remain = 0;
 
   do {
     $variables = [
@@ -251,6 +250,8 @@ function getMedias(GuzzleHttp\Client $http): array
     ]);
 
     $raw_data_media = json_decode((string) $response->getBody(), true);
+
+    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_medias = $raw_data_media['data']['Page']['media'];
 
@@ -325,13 +326,11 @@ function getMedias(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_media['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 80) { //Si el numero de peticion es el 90
-      $index_request = 0; //reset de la variable
-      sleep(60); //Se parara durante 60 segundos
-    }else{
-
-      $index_request++;
+    if ($remain == 1) { //Si el numero de peticion es el 90
+      echo 'esperando...';
+      sleep(61); //Se parara durante 60 segundos
     }
+
   } while ($hasNextPage);
 
   return $medias;
@@ -366,7 +365,7 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $index_request = 0;
+  $remain = 0;
 
   do {
     $variables = [
@@ -381,6 +380,8 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
     ]);
 
     $raw_data_persons = json_decode((string) $response->getBody(), true);
+
+    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_persons = $raw_data_persons['data']['Page']['staff'];
     foreach ($raw_persons as $value) {
@@ -399,11 +400,9 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_persons['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 80) { //Si el numero de peticion es el 90
-      $index_request = 0; //reset de la variable
+    if ($remain == 1) { //Si el numero de peticion es el 90
+      echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
-    } else {
-      $index_request++;
     }
   } while ($hasNextPage);
 
@@ -439,7 +438,7 @@ function getMediaRelation(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $index_request = 0;
+  $remain = 0;
 
   do {
     $variables = [
@@ -454,6 +453,8 @@ function getMediaRelation(GuzzleHttp\Client $http): array
     ]);
 
     $raw_media_relations = json_decode((string) $response->getBody(), true);
+
+    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_relations = $raw_media_relations['data']['Page']['media'];
 
@@ -479,12 +480,11 @@ function getMediaRelation(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_media_relations['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 80) { //Si el numero de peticion es el 90
-      $index_request = 0; //reset de la variable
+    if ($remain == 1) { //Si el numero de peticion es el 90
+      echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
-    }else{
-      $index_request++;
     }
+
   } while ($hasNextPage);
 
   return $medias_related_to;
@@ -532,7 +532,7 @@ function getCharacter(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $index_request = 0;
+  $remain = 0;
 
   do {
     $variables = [
@@ -547,6 +547,8 @@ function getCharacter(GuzzleHttp\Client $http): array
     ]);
 
     $raw_data_characters = json_decode((string) $response->getBody(), true);
+
+    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_characters = $raw_data_characters['data']['Page']['characters'];
     foreach ($raw_characters as $value) {
@@ -605,11 +607,9 @@ function getCharacter(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_characters['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 80) { //Si el numero de peticion es el 90
-      $index_request = 0; //reset de la variable
+    if ($remain == 1) { //Si el numero de peticion es el 90
+      echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
-    } else {
-      $index_request++;
     }
 
   } while ($hasNextPage);
@@ -646,7 +646,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $index_request = 0;
+  $remain = 0;
 
   do {
     $variables = [
@@ -661,7 +661,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     ]);
 
     $raw_works_in = json_decode((string) $response->getBody(), true);
-
+    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
     $raw_people_works_in = $raw_works_in['data']['Page']['staff'];
 
     foreach ($raw_people_works_in as $value) {
@@ -680,11 +680,9 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_works_in['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 80) { //Si el numero de peticion es el 90
-      $index_request = 0; //reset de la variable
+    if ($remain == 1) { //Si el numero de peticion es el 90
+      echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
-    }else {
-      $index_request++;
     }
 
   } while ($hasNextPage);
@@ -723,7 +721,7 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
 
   $hasNextPage = true;
   $currentPage = 1;
-  $index_request = 0;
+  $remain = 0;
 
   do {
     $variables = [
@@ -738,6 +736,8 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
     ]);
 
     $raw_data_charactersAppearsIn = json_decode((string) $response->getBody(), true);
+
+    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_charactersAppearsIn = $raw_data_charactersAppearsIn['data']['Page']['characters'];
     foreach ($raw_charactersAppearsIn as $value) {
@@ -761,11 +761,9 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
     $currentPage++;
     $hasNextPage = $raw_data_charactersAppearsIn['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($index_request == 80) { //Si el numero de peticion es el 90
-      $index_request = 0; //reset de la variable
+    if ($remain == 1) { //Si el numero de peticion es el 90
+      echo 'esperando...';
       sleep(61); //Se parara durante 60 segundos
-    }else {
-      $index_request++;
     }
 
   } while ($hasNextPage);
