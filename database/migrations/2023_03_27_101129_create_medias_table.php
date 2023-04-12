@@ -26,7 +26,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('season', array('WINTER', 'SPRING', 'SUMMER', 'FALL'))->nullable();
-            $table->integer('season_year');
+            $table->integer('season_year')->nullable();
             $table->json('studios');
             $table->string('source')->nullable();
             $table->json('genres');

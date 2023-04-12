@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('age')->nullable();
             $table->string('blood_type')->nullable();
             $table->longText('description')->nullable();
-            $table->string('image_large');
-            $table->string('image_medium');
+            $table->string('image_large')->nullable();
+            $table->string('image_medium')->nullable();
             $table->timestamps();
         });
     }
