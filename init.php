@@ -88,7 +88,7 @@ function getStaff(GuzzleHttp\Client $http): array
     $variables = [
       "page" => $currentPage
     ];
-    sleep(1);
+    usleep(800000);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -97,7 +97,6 @@ function getStaff(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     } catch (Exception $e) {
       echo 'exception...';
       sleep(500);
@@ -107,10 +106,7 @@ function getStaff(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     }
-
-
 
     $raw_data_staffs = json_decode((string) $response->getBody(), true);
 
@@ -173,12 +169,6 @@ function getStaff(GuzzleHttp\Client $http): array
     }
     $currentPage++;
     $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
-
-    // if ($remain == 50) { //Si el numero de peticion es el 90
-    //   echo 'esperando...';
-    //   sleep(61); //Se parara durante 60 segundos
-    // }
-
   } while ($hasNextPage);
 
 
@@ -264,7 +254,6 @@ function getMedias(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     } catch (Exception $e) {
       echo 'Exception ocurred...';
       sleep(500);
@@ -274,7 +263,6 @@ function getMedias(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     }
 
     $raw_data_media = json_decode((string) $response->getBody(), true);
@@ -283,7 +271,7 @@ function getMedias(GuzzleHttp\Client $http): array
 
     $raw_medias = $raw_data_media['data']['Page']['media'];
 
-    echo 'Request remaining: '.$remain;
+    echo 'Request remaining: ' . $remain;
 
     foreach ($raw_medias as $value) {
       //startDate
@@ -336,7 +324,7 @@ function getMedias(GuzzleHttp\Client $http): array
         'episodes'                 => $episodes,
         'chapters'                 => $chapters,
         'airing_status'            => $airing_status,
-        'start_date'               => $start_date ? date('Y-m-d', $start_date):null, //string
+        'start_date'               => $start_date ? date('Y-m-d', $start_date) : null, //string
         'end_date'                 => $end_date ? date('Y-m-d', $end_date) : null, //string
         'season'                   => $season,
         'season_year'              => $season_year,
@@ -355,12 +343,6 @@ function getMedias(GuzzleHttp\Client $http): array
     }
     $currentPage++;
     $hasNextPage = $raw_data_media['data']['Page']['pageInfo']['hasNextPage'];
-
-    // if ($remain == 50) { //Si el numero de peticion es el 90
-    //   echo 'esperando...';
-    //   sleep(61); //Se parara durante 60 segundos
-    // }
-
   } while ($hasNextPage);
 
   return $medias;
@@ -395,13 +377,12 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $remain = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    sleep(1);
+    usleep(800000);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -410,7 +391,6 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     } catch (Exception $e) {
       echo 'exception...';
       sleep(500);
@@ -420,12 +400,9 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     }
 
     $raw_data_persons = json_decode((string) $response->getBody(), true);
-
-    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_persons = $raw_data_persons['data']['Page']['staff'];
     foreach ($raw_persons as $value) {
@@ -443,11 +420,6 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
     }
     $currentPage++;
     $hasNextPage = $raw_data_persons['data']['Page']['pageInfo']['hasNextPage'];
-
-    // if ($remain == 50) { //Si el numero de peticion es el 90
-    //   echo 'esperando...';
-    //   sleep(61); //Se parara durante 60 segundos
-    // }
   } while ($hasNextPage);
 
   return $person_dubs_character;
@@ -482,13 +454,12 @@ function getMediaRelation(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $remain = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    sleep(1);
+    usleep(8000000);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -497,7 +468,6 @@ function getMediaRelation(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     } catch (Exception $e) {
       echo 'exception...';
       sleep(500);
@@ -507,12 +477,9 @@ function getMediaRelation(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     }
 
     $raw_media_relations = json_decode((string) $response->getBody(), true);
-
-    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_relations = $raw_media_relations['data']['Page']['media'];
 
@@ -537,12 +504,6 @@ function getMediaRelation(GuzzleHttp\Client $http): array
 
     $currentPage++;
     $hasNextPage = $raw_media_relations['data']['Page']['pageInfo']['hasNextPage'];
-
-    // if ($remain == 50) { //Si el numero de peticion es el 90
-    //   echo 'esperando...';
-    //   sleep(61); //Se parara durante 60 segundos
-    // }
-
   } while ($hasNextPage);
 
   return $medias_related_to;
@@ -590,13 +551,12 @@ function getCharacter(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $remain = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    sleep(1);
+    usleep(800000);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -605,7 +565,6 @@ function getCharacter(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     } catch (Exception $e) {
       echo 'exception...';
       sleep(500);
@@ -615,12 +574,9 @@ function getCharacter(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     }
 
     $raw_data_characters = json_decode((string) $response->getBody(), true);
-
-    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_characters = $raw_data_characters['data']['Page']['characters'];
     foreach ($raw_characters as $value) {
@@ -678,12 +634,6 @@ function getCharacter(GuzzleHttp\Client $http): array
     }
     $currentPage++;
     $hasNextPage = $raw_data_characters['data']['Page']['pageInfo']['hasNextPage'];
-
-    // if ($remain == 50) { //Si el numero de peticion es el 90
-    //   echo 'esperando...';
-    //   sleep(61); //Se parara durante 60 segundos
-    // }
-
   } while ($hasNextPage);
 
 
@@ -724,7 +674,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     $variables = [
       "page" => $currentPage
     ];
-    sleep(1);
+    usleep(8000000);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -733,7 +683,6 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     } catch (Exception $e) {
       echo 'exception...';
       sleep(500);
@@ -743,11 +692,9 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
           'variables' => $variables,
         ]
       ]);
-
     }
 
     $raw_works_in = json_decode((string) $response->getBody(), true);
-    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
     $raw_people_works_in = $raw_works_in['data']['Page']['staff'];
 
     foreach ($raw_people_works_in as $value) {
@@ -765,18 +712,13 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     }
     $currentPage++;
     $hasNextPage = $raw_works_in['data']['Page']['pageInfo']['hasNextPage'];
-
-    // if ($remain == 50) { //Si el numero de peticion es el 90
-    //   echo 'esperando...';
-    //   sleep(61); //Se parara durante 60 segundos
-    // }
-
   } while ($hasNextPage);
 
   return $people_works_in;
 }
 
-function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
+function getCharacterAppearsIn(GuzzleHttp\Client $http): array
+{
   $query = '
   query ($page: Int) { # Define each page
     Page(page:$page) {
@@ -807,13 +749,12 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
 
   $hasNextPage = true;
   $currentPage = 1;
-  $remain = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    sleep(1);
+    usleep(800000);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -822,7 +763,6 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
           'variables' => $variables,
         ]
       ]);
-
     } catch (Exception $e) {
       echo 'exception...';
       sleep(500);
@@ -832,20 +772,17 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
           'variables' => $variables,
         ]
       ]);
-
     }
 
     $raw_data_charactersAppearsIn = json_decode((string) $response->getBody(), true);
 
-    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
-
     $raw_charactersAppearsIn = $raw_data_charactersAppearsIn['data']['Page']['characters'];
     foreach ($raw_charactersAppearsIn as $value) {
-      
+
       $character_id    = $value['id'];
       $media_ids        = $value['media']['edges'];
 
-      foreach($media_ids as $media_id){
+      foreach ($media_ids as $media_id) {
 
         $characterAppearsIn = [
           'character_id'  => $character_id,
@@ -855,17 +792,9 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
 
         array_push($charactersAppearsIn, $characterAppearsIn);
       }
-
-    
     }
     $currentPage++;
     $hasNextPage = $raw_data_charactersAppearsIn['data']['Page']['pageInfo']['hasNextPage'];
-
-    // if ($remain == 50) { //Si el numero de peticion es el 90
-    //   echo 'esperando...';
-    //   sleep(61); //Se parara durante 60 segundos
-    // }
-
   } while ($hasNextPage);
 
 
@@ -890,22 +819,21 @@ function insertStaffs(PDO $db, array $staffs)
 
   //foreach ($data as $row) {
   foreach ($staffs as $staff) {
-      $insert_statement->execute([
-        ':id'             => $staff['id'],
-        ':name'           => $staff['name'],
-        ':romaji'         => $staff['romaji'],
-        ':gender'         => $staff['gender'],
-        ':date_of_birth'  => $staff['date_of_birth'],
-        ':date_of_death'  => $staff['date_of_death'],
-        ':age'            => $staff['age'],
-        ':years_active'   => $staff['years_active'],
-        ':home_town'      => $staff['home_town'],
-        ':blood_type'     => $staff['blood_type'],
-        ':description'    => $staff['description'],
-        ':image_large'    => $staff['image_large'],
-        ':image_medium'   => $staff['image_medium'],
-      ]);
-
+    $insert_statement->execute([
+      ':id'             => $staff['id'],
+      ':name'           => $staff['name'],
+      ':romaji'         => $staff['romaji'],
+      ':gender'         => $staff['gender'],
+      ':date_of_birth'  => $staff['date_of_birth'],
+      ':date_of_death'  => $staff['date_of_death'],
+      ':age'            => $staff['age'],
+      ':years_active'   => $staff['years_active'],
+      ':home_town'      => $staff['home_town'],
+      ':blood_type'     => $staff['blood_type'],
+      ':description'    => $staff['description'],
+      ':image_large'    => $staff['image_large'],
+      ':image_medium'   => $staff['image_medium'],
+    ]);
   }
 }
 
@@ -951,7 +879,7 @@ function insertMedias(PDO $db, array $medias): void
 function insertMediaRelations(PDO $db, array $medias_relations)
 {
   $insert_sql_str = <<<END
-    INSERT INTO related_to (media_id, related_media_id, relationship_type)
+    REPLACE INTO related_to (media_id, related_media_id, relationship_type)
     VALUES (:media_id, :related_media_id, :relationship_type)
   END;
 
@@ -996,7 +924,7 @@ function insertCharacters(PDO $db, array $characters)
 function insertPersonDubCharacter(PDO $db, array $persons_dub_array)
 {
   $insert_sql_str = <<<END
-    INSERT INTO person_dubs_character (people_id, character_id)
+    REPLACE INTO person_dubs_character (people_id, character_id)
     VALUES (:people_id, :character_id)
   END;
 
@@ -1015,7 +943,7 @@ function insertPersonDubCharacter(PDO $db, array $persons_dub_array)
 function insertPeopleWorksIn(PDO $db, array $people_works_in)
 {
   $insert_sql_str = <<<END
-    INSERT INTO works_in (person_id, media_id)
+    REPLACE INTO works_in (person_id, media_id)
     VALUES (:person_id, :media_id)
   END;
 
@@ -1029,22 +957,23 @@ function insertPeopleWorksIn(PDO $db, array $people_works_in)
   }
 }
 
-function insertCharacterAppearsIn(PDO $db, array $characters){
+function insertCharacterAppearsIn(PDO $db, array $characters)
+{
   $insert_sql_str = <<<END
-    INSERT INTO characters_appears_in (media_id, character_id, role)
+    REPLACE INTO characters_appears_in (media_id, character_id, role)
     VALUES (:media_id, :character_id, :role)
   END;
 
   $insert_statement = $db->prepare($insert_sql_str);
 
   //foreach ($data as $row) {
-    foreach ($characters as $character) {
-      $insert_statement->execute([
-        ':media_id' => $character['media_id'],
-        ':character_id' => $character['character_id'],
-        ':role' => $character['role'],
-      ]);
-    }
+  foreach ($characters as $character) {
+    $insert_statement->execute([
+      ':media_id' => $character['media_id'],
+      ':character_id' => $character['character_id'],
+      ':role' => $character['role'],
+    ]);
+  }
 }
 
 
@@ -1104,6 +1033,9 @@ function main()
   // insertPeopleWorksIn($db, $people_works_in);
   // sleep(60);
   //!USE REPLACE FOR RELATIONS TABLE FOR DO NOT DUPLICATE RECORDS WHEN CRON RUNS
+
+  //?REPLACE INTO table(id,population)
+  //?VALUES(2,2547);
 
   //  echo count($staff_array_data);
   echo "End of script :)";
