@@ -264,7 +264,7 @@ function getMedias(GuzzleHttp\Client $http): array
         ]
       ]);
     }
-    $totalPages = $totalPages++;
+    $totalPages++;
     echo $totalPages . '-';
 
     $raw_data_media = json_decode((string) $response->getBody(), true);
