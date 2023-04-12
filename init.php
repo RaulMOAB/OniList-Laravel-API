@@ -35,41 +35,47 @@ function getStaff(GuzzleHttp\Client $http): array
 {
   $query = '
   query ($page: Int) { # Define each page
-    Page(page:$page) {
+    Page(page:$page perPage:1) {
       pageInfo{
         hasNextPage
       }
-      staff {
-        id
-        name {
-          full
-          native
-        }
-        gender
-        dateOfBirth{
-          year
-          month
-          day
-        }
-        dateOfDeath{
-          year
-          month
-          day
-        }
-        age
-        yearsActive
-        homeTown
-        bloodType
-        image {
-          large
-          medium
-        }
-        dateOfBirth {
-          year
-          month
-          day
-        }
-        description
+      media{
+        staff {
+          edges{
+            node{
+              id
+              name {
+                full
+                native
+              }
+              gender
+              dateOfBirth{
+                year
+                month
+                day
+              }
+              dateOfDeath{
+                year
+                month
+                day
+              }
+              age
+              yearsActive
+              homeTown
+              bloodType
+              image {
+                large
+                medium
+              }
+              dateOfBirth {
+                year
+                month
+                day
+              }
+              description
+            }
+            }
+          }
       }
     }
   }
@@ -112,7 +118,7 @@ function getStaff(GuzzleHttp\Client $http): array
     $totalPages++;
     echo $totalPages . '-';
 
-    $raw_staffs = $raw_data_staffs['data']['Page']['staff'];
+    $raw_staffs = $raw_data_staffs['data']['Page']['media']['staff']['edges']['node'];
     foreach ($raw_staffs as $value) {
 
       //birthDate
@@ -169,7 +175,7 @@ function getStaff(GuzzleHttp\Client $http): array
     }
     $currentPage++;
     $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
-  } while ($hasNextPage);
+  } while ($totalPages<=1);
 
 
   return $staffs;
