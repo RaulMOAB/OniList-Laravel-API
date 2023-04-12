@@ -88,7 +88,7 @@ function getStaff(GuzzleHttp\Client $http): array
     $variables = [
       "page" => $currentPage
     ];
-
+    sleep(1);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -100,7 +100,7 @@ function getStaff(GuzzleHttp\Client $http): array
 
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(60);
+      sleep(500);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -174,10 +174,10 @@ function getStaff(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 35) { //Si el numero de peticion es el 90
-      echo 'esperando...';
-      sleep(61); //Se parara durante 60 segundos
-    }
+    // if ($remain == 50) { //Si el numero de peticion es el 90
+    //   echo 'esperando...';
+    //   sleep(61); //Se parara durante 60 segundos
+    // }
 
   } while ($hasNextPage);
 
@@ -255,7 +255,7 @@ function getMedias(GuzzleHttp\Client $http): array
     $variables = [
       "page" => $currentPage
     ];
-
+    usleep(800000);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -266,8 +266,8 @@ function getMedias(GuzzleHttp\Client $http): array
       ]);
 
     } catch (Exception $e) {
-      echo 'exception...';
-      sleep(60);
+      echo 'Exception ocurred...';
+      sleep(500);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -282,6 +282,8 @@ function getMedias(GuzzleHttp\Client $http): array
     $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_medias = $raw_data_media['data']['Page']['media'];
+
+    echo 'Request remaining: '.$remain;
 
     foreach ($raw_medias as $value) {
       //startDate
@@ -313,7 +315,7 @@ function getMedias(GuzzleHttp\Client $http): array
       $end_date = strtotime($end_date_builded);
       $season = $value['season'];
       $season_year = $value['seasonYear'];
-      $studios = array_map('getJsonValues', $value['studios']['nodes']); //!Accede a um array nulo
+      $studios = array_map('getJsonValues', $value['studios']['nodes']);
       $source = $value['source'];
       $genres = $value['genres'];
       $romaji = $value['title']['romaji'];
@@ -334,7 +336,7 @@ function getMedias(GuzzleHttp\Client $http): array
         'episodes'                 => $episodes,
         'chapters'                 => $chapters,
         'airing_status'            => $airing_status,
-        'start_date'               => date('Y-m-d', $start_date), //string
+        'start_date'               => $start_date ? date('Y-m-d', $start_date):null, //string
         'end_date'                 => $end_date ? date('Y-m-d', $end_date) : null, //string
         'season'                   => $season,
         'season_year'              => $season_year,
@@ -354,10 +356,10 @@ function getMedias(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_media['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 35) { //Si el numero de peticion es el 90
-      echo 'esperando...';
-      sleep(61); //Se parara durante 60 segundos
-    }
+    // if ($remain == 50) { //Si el numero de peticion es el 90
+    //   echo 'esperando...';
+    //   sleep(61); //Se parara durante 60 segundos
+    // }
 
   } while ($hasNextPage);
 
@@ -399,7 +401,7 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
     $variables = [
       "page" => $currentPage
     ];
-
+    sleep(1);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -411,7 +413,7 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
 
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(60);
+      sleep(500);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -442,10 +444,10 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_persons['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 35) { //Si el numero de peticion es el 90
-      echo 'esperando...';
-      sleep(61); //Se parara durante 60 segundos
-    }
+    // if ($remain == 50) { //Si el numero de peticion es el 90
+    //   echo 'esperando...';
+    //   sleep(61); //Se parara durante 60 segundos
+    // }
   } while ($hasNextPage);
 
   return $person_dubs_character;
@@ -486,7 +488,7 @@ function getMediaRelation(GuzzleHttp\Client $http): array
     $variables = [
       "page" => $currentPage
     ];
-
+    sleep(1);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -498,7 +500,7 @@ function getMediaRelation(GuzzleHttp\Client $http): array
 
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(60);
+      sleep(500);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -536,10 +538,10 @@ function getMediaRelation(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_media_relations['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 35) { //Si el numero de peticion es el 90
-      echo 'esperando...';
-      sleep(61); //Se parara durante 60 segundos
-    }
+    // if ($remain == 50) { //Si el numero de peticion es el 90
+    //   echo 'esperando...';
+    //   sleep(61); //Se parara durante 60 segundos
+    // }
 
   } while ($hasNextPage);
 
@@ -594,7 +596,7 @@ function getCharacter(GuzzleHttp\Client $http): array
     $variables = [
       "page" => $currentPage
     ];
-
+    sleep(1);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -606,7 +608,7 @@ function getCharacter(GuzzleHttp\Client $http): array
 
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(60);
+      sleep(500);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -677,10 +679,10 @@ function getCharacter(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_data_characters['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 35) { //Si el numero de peticion es el 90
-      echo 'esperando...';
-      sleep(61); //Se parara durante 60 segundos
-    }
+    // if ($remain == 50) { //Si el numero de peticion es el 90
+    //   echo 'esperando...';
+    //   sleep(61); //Se parara durante 60 segundos
+    // }
 
   } while ($hasNextPage);
 
@@ -722,7 +724,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     $variables = [
       "page" => $currentPage
     ];
-
+    sleep(1);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -734,7 +736,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
 
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(60);
+      sleep(500);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -764,10 +766,10 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     $currentPage++;
     $hasNextPage = $raw_works_in['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 35) { //Si el numero de peticion es el 90
-      echo 'esperando...';
-      sleep(61); //Se parara durante 60 segundos
-    }
+    // if ($remain == 50) { //Si el numero de peticion es el 90
+    //   echo 'esperando...';
+    //   sleep(61); //Se parara durante 60 segundos
+    // }
 
   } while ($hasNextPage);
 
@@ -811,7 +813,7 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
     $variables = [
       "page" => $currentPage
     ];
-
+    sleep(1);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -823,7 +825,7 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
 
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(60);
+      sleep(500);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -859,10 +861,10 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array{
     $currentPage++;
     $hasNextPage = $raw_data_charactersAppearsIn['data']['Page']['pageInfo']['hasNextPage'];
 
-    if ($remain == 35) { //Si el numero de peticion es el 90
-      echo 'esperando...';
-      sleep(61); //Se parara durante 60 segundos
-    }
+    // if ($remain == 50) { //Si el numero de peticion es el 90
+    //   echo 'esperando...';
+    //   sleep(61); //Se parara durante 60 segundos
+    // }
 
   } while ($hasNextPage);
 
@@ -1061,50 +1063,50 @@ function main()
   ###INSERTIONS###
 
   #Staff insertion
-  echo 'staff action';
-  $staff_array_data = getStaff($http);
-  insertStaffs($db, $staff_array_data);
-  sleep(61);
+  // echo 'staff action';
+  // $staff_array_data = getStaff($http);
+  // insertStaffs($db, $staff_array_data);
+  // sleep(60);
 
   echo 'media action';
   #Media insertion
   $media_array_data = getMedias($http);
   insertMedias($db, $media_array_data);
-  sleep(61);
+  sleep(60);
 
-  echo 'character action';
-  #Character insertion
-  $character_array_data = getCharacter($http);
-  insertCharacters($db, $character_array_data);
-  sleep(61);
+  // echo 'character action';
+  // #Character insertion
+  // $character_array_data = getCharacter($http);
+  // insertCharacters($db, $character_array_data);
+  // sleep(60);
 
-  echo 'appears_in action';
-  #character_appears_in insertion
-  $characterAppearsIn_array_data = getCharacterAppearsIn($http);
-  insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
-  sleep(61);
+  // echo 'appears_in action';
+  // #character_appears_in insertion
+  // $characterAppearsIn_array_data = getCharacterAppearsIn($http);
+  // insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
+  // sleep(60);
 
-  echo 'dubs action';
-  #person_dubs_character insertion
-  $person_dub_character_array = getPersonDubCharacter($http);
-  insertPersonDubCharacter($db, $person_dub_character_array);
-  sleep(61);
+  // echo 'dubs action';
+  // #person_dubs_character insertion
+  // $person_dub_character_array = getPersonDubCharacter($http);
+  // insertPersonDubCharacter($db, $person_dub_character_array);
+  // sleep(60);
 
-  echo 'related_to action';
-  #related_to insertion
-  $medias_relations = getMediaRelation($http);
-  insertMediaRelations($db, $medias_relations);
-  sleep(61);
+  // echo 'related_to action';
+  // #related_to insertion
+  // $medias_relations = getMediaRelation($http);
+  // insertMediaRelations($db, $medias_relations);
+  // sleep(60);
 
-  echo 'work_in action';
-  #works_in insertion
-  $people_works_in = getPeopleWorksIn($http);
-  insertPeopleWorksIn($db, $people_works_in);
-  sleep(61);
+  // echo 'work_in action';
+  // #works_in insertion
+  // $people_works_in = getPeopleWorksIn($http);
+  // insertPeopleWorksIn($db, $people_works_in);
+  // sleep(60);
   //!USE REPLACE FOR RELATIONS TABLE FOR DO NOT DUPLICATE RECORDS WHEN CRON RUNS
 
   //  echo count($staff_array_data);
-  echo "script finalizado";
+  echo "End of script :)";
 }
 
 main();
