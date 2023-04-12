@@ -35,47 +35,41 @@ function getStaff(GuzzleHttp\Client $http): array
 {
   $query = '
   query ($page: Int) { # Define each page
-    Page(page:$page perPage:1) {
+    Page(page:$page) {
       pageInfo{
         hasNextPage
       }
-      media{
-        staff {
-          edges{
-            node{
-              id
-              name {
-                full
-                native
-              }
-              gender
-              dateOfBirth{
-                year
-                month
-                day
-              }
-              dateOfDeath{
-                year
-                month
-                day
-              }
-              age
-              yearsActive
-              homeTown
-              bloodType
-              image {
-                large
-                medium
-              }
-              dateOfBirth {
-                year
-                month
-                day
-              }
-              description
-            }
-            }
-          }
+      staff {
+        id
+        name {
+          full
+          native
+        }
+        gender
+        dateOfBirth{
+          year
+          month
+          day
+        }
+        dateOfDeath{
+          year
+          month
+          day
+        }
+        age
+        yearsActive
+        homeTown
+        bloodType
+        image {
+          large
+          medium
+        }
+        dateOfBirth {
+          year
+          month
+          day
+        }
+        description
       }
     }
   }
@@ -105,7 +99,7 @@ function getStaff(GuzzleHttp\Client $http): array
       ]);
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(500);
+      sleep(61);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -118,7 +112,7 @@ function getStaff(GuzzleHttp\Client $http): array
     $totalPages++;
     echo $totalPages . '-';
 
-    $raw_staffs = $raw_data_staffs['data']['Page']['media']['staff']['edges']['node'];
+    $raw_staffs = $raw_data_staffs['data']['Page']['staff'];
     foreach ($raw_staffs as $value) {
 
       //birthDate
@@ -173,9 +167,11 @@ function getStaff(GuzzleHttp\Client $http): array
 
       array_push($staffs, $staff);
     }
+
     $currentPage++;
     $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
-  } while ($totalPages<=1);
+
+  } while ($totalPages<=2000);
 
 
   return $staffs;
@@ -262,7 +258,7 @@ function getMedias(GuzzleHttp\Client $http): array
       ]);
     } catch (Exception $e) {
       echo 'Exception ocurred...';
-      sleep(500);
+      sleep(61);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -399,7 +395,7 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
       ]);
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(500);
+      sleep(61);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -478,7 +474,7 @@ function getMediaRelation(GuzzleHttp\Client $http): array
       ]);
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(500);
+      sleep(61);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -696,7 +692,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
       ]);
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(500);
+      sleep(61);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -724,7 +720,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     }
     $currentPage++;
     $hasNextPage = $raw_works_in['data']['Page']['pageInfo']['hasNextPage'];
-  } while ($hasNextPage);
+  } while ($totalPages<=2000);
 
   return $people_works_in;
 }
@@ -777,7 +773,7 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array
       ]);
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(500);
+      sleep(61);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -956,12 +952,17 @@ function insertPersonDubCharacter(PDO $db, array $persons_dub_array)
 
   $index = 0;
   foreach ($persons_dub_array as $person_dub) {
-    $insert_statement->execute([
-      ':people_id' => $person_dub['people_id'],
-      ':character_id' => $person_dub['character_id'],
-    ]);
-    $index++;
-    echo ' insert numero:' . $index . ' ';
+    try{
+      $insert_statement->execute([
+        ':people_id' => $person_dub['people_id'],
+        ':character_id' => $person_dub['character_id'],
+      ]);
+      $index++;
+      echo ' insert numero:' . $index . ' ';
+    }catch(PDOException $e){
+      echo ' NO EXISTE ';
+      continue;
+    }
   }
 }
 
@@ -976,12 +977,17 @@ function insertPeopleWorksIn(PDO $db, array $people_works_in)
 
   $index = 0;
   foreach ($people_works_in as $value) {
-    $insert_statement->execute([
-      ':person_id' => $value['person_id'],
-      ':media_id' => $value['media_id']
-    ]);
-    $index++;
-    echo ' insert numero:' . $index . ' ';
+    try{
+      $insert_statement->execute([
+        ':person_id' => $value['person_id'],
+        ':media_id' => $value['media_id']
+      ]);
+      $index++;
+      echo ' insert numero:' . $index . ' ';
+    }catch(PDOException $e){
+      echo ' NO EXISTE ';
+      continue;
+    }
   }
 }
 
@@ -1030,37 +1036,31 @@ function main()
   #Character insertion
   $character_array_data = getCharacter($http);
   insertCharacters($db, $character_array_data);
-  sleep(60);
 
   echo 'appears_in action';
   #character_appears_in insertion
   $characterAppearsIn_array_data = getCharacterAppearsIn($http);
   insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
-  sleep(60);
   
   echo 'related_to action';
   #related_to insertion
   $medias_relations = getMediaRelation($http);
   insertMediaRelations($db, $medias_relations);
-  sleep(60);
 
   #Staff insertion
   echo 'staff action';
   $staff_array_data = getStaff($http);
   insertStaffs($db, $staff_array_data);
-  sleep(60);
 
   echo 'dubs action';
   #person_dubs_character insertion
   $person_dub_character_array = getPersonDubCharacter($http);
   insertPersonDubCharacter($db, $person_dub_character_array);
-  sleep(60);
 
   echo 'work_in action';
   #works_in insertion
   $people_works_in = getPeopleWorksIn($http);
   insertPeopleWorksIn($db, $people_works_in);
-  sleep(60);
   //!USE REPLACE FOR RELATIONS TABLE FOR DO NOT DUPLICATE RECORDS WHEN CRON RUNS
 
   //?REPLACE INTO table(id,population)
