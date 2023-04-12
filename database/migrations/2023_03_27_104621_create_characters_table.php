@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('characters', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('romaji');
+            $table->string('romaji')->nullable();
             $table->string('gender')->nullable();
             $table->string('birthday')->nullable();
             $table->string('age')->nullable();

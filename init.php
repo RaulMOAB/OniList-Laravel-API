@@ -825,6 +825,7 @@ function insertStaffs(PDO $db, array $staffs)
 
 
   //foreach ($data as $row) {
+  $index = 0;
   foreach ($staffs as $staff) {
     $insert_statement->execute([
       ':id'             => $staff['id'],
@@ -841,6 +842,8 @@ function insertStaffs(PDO $db, array $staffs)
       ':image_large'    => $staff['image_large'],
       ':image_medium'   => $staff['image_medium'],
     ]);
+    $index++;
+    echo ' insert numero:'.$index.' ';
   }
 }
 
@@ -853,6 +856,7 @@ function insertMedias(PDO $db, array $medias): void
 
   $insert_statement = $db->prepare($insert_sql_str);
 
+  $index = 0;
 
   foreach ($medias as $media) {
     $insert_statement->execute([
@@ -880,6 +884,8 @@ function insertMedias(PDO $db, array $medias): void
       ':external_link' => $media['external_link'],
       ':type' => $media['type']
     ]);
+    $index++;
+    echo ' insert numero:' . $index . ' ';
   }
 }
 
@@ -891,13 +897,15 @@ function insertMediaRelations(PDO $db, array $medias_relations)
   END;
 
   $insert_statement = $db->prepare($insert_sql_str);
-
+  $index = 0;
   foreach ($medias_relations as $media) {
     $insert_statement->execute([
       ':media_id' => $media['media_id'],
       ':related_media_id' => $media['related_media_id'],
       ':relationship_type' => $media['relationship_type']
     ]);
+    $index++;
+    echo ' insert numero:' . $index . ' ';
   }
 }
 
@@ -911,7 +919,7 @@ function insertCharacters(PDO $db, array $characters)
   $insert_statement = $db->prepare($insert_sql_str);
 
 
-  //foreach ($data as $row) {
+  $index = 0;
   foreach ($characters as $character) {
     $insert_statement->execute([
       ':id' => $character['id'],
@@ -925,6 +933,8 @@ function insertCharacters(PDO $db, array $characters)
       ':image_large' => $character['image_large'],
       ':image_medium' => $character['image_medium'],
     ]);
+    $index++;
+    echo ' insert numero:' . $index . ' ';
   }
 }
 
@@ -938,12 +948,14 @@ function insertPersonDubCharacter(PDO $db, array $persons_dub_array)
   $insert_statement = $db->prepare($insert_sql_str);
 
 
-  //foreach ($data as $row) {
+  $index = 0;
   foreach ($persons_dub_array as $person_dub) {
     $insert_statement->execute([
       ':people_id' => $person_dub['people_id'],
       ':character_id' => $person_dub['character_id'],
     ]);
+    $index++;
+    echo ' insert numero:' . $index . ' ';
   }
 }
 
@@ -956,11 +968,14 @@ function insertPeopleWorksIn(PDO $db, array $people_works_in)
 
   $insert_statement = $db->prepare($insert_sql_str);
 
+  $index = 0;
   foreach ($people_works_in as $value) {
     $insert_statement->execute([
       ':person_id' => $value['person_id'],
       ':media_id' => $value['media_id']
     ]);
+    $index++;
+    echo ' insert numero:' . $index . ' ';
   }
 }
 
@@ -973,13 +988,15 @@ function insertCharacterAppearsIn(PDO $db, array $characters)
 
   $insert_statement = $db->prepare($insert_sql_str);
 
-  //foreach ($data as $row) {
+  $index = 0;
   foreach ($characters as $character) {
     $insert_statement->execute([
       ':media_id' => $character['media_id'],
       ':character_id' => $character['character_id'],
       ':role' => $character['role'],
     ]);
+    $index++;
+    echo ' insert numero:' . $index . ' ';
   }
 }
 
@@ -998,47 +1015,48 @@ function main()
 
   ###INSERTIONS###
 
-  #Staff insertion
-  // echo 'staff action';
-  // $staff_array_data = getStaff($http);
-  // insertStaffs($db, $staff_array_data);
-  // sleep(60);
-
+  
   echo 'media action';
   #Media insertion
   $media_array_data = getMedias($http);
   insertMedias($db, $media_array_data);
   sleep(60);
 
-  // echo 'character action';
-  // #Character insertion
-  // $character_array_data = getCharacter($http);
-  // insertCharacters($db, $character_array_data);
-  // sleep(60);
+  echo 'character action';
+  #Character insertion
+  $character_array_data = getCharacter($http);
+  insertCharacters($db, $character_array_data);
+  sleep(60);
 
-  // echo 'appears_in action';
-  // #character_appears_in insertion
-  // $characterAppearsIn_array_data = getCharacterAppearsIn($http);
-  // insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
-  // sleep(60);
+  echo 'appears_in action';
+  #character_appears_in insertion
+  $characterAppearsIn_array_data = getCharacterAppearsIn($http);
+  insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
+  sleep(60);
+  
+  echo 'related_to action';
+  #related_to insertion
+  $medias_relations = getMediaRelation($http);
+  insertMediaRelations($db, $medias_relations);
+  sleep(60);
+  
+  #Staff insertion
+  echo 'staff action';
+  $staff_array_data = getStaff($http);
+  insertStaffs($db, $staff_array_data);
+  sleep(60);
 
-  // echo 'dubs action';
-  // #person_dubs_character insertion
-  // $person_dub_character_array = getPersonDubCharacter($http);
-  // insertPersonDubCharacter($db, $person_dub_character_array);
-  // sleep(60);
+  echo 'dubs action';
+  #person_dubs_character insertion
+  $person_dub_character_array = getPersonDubCharacter($http);
+  insertPersonDubCharacter($db, $person_dub_character_array);
+  sleep(60);
 
-  // echo 'related_to action';
-  // #related_to insertion
-  // $medias_relations = getMediaRelation($http);
-  // insertMediaRelations($db, $medias_relations);
-  // sleep(60);
-
-  // echo 'work_in action';
-  // #works_in insertion
-  // $people_works_in = getPeopleWorksIn($http);
-  // insertPeopleWorksIn($db, $people_works_in);
-  // sleep(60);
+  echo 'work_in action';
+  #works_in insertion
+  $people_works_in = getPeopleWorksIn($http);
+  insertPeopleWorksIn($db, $people_works_in);
+  sleep(60);
   //!USE REPLACE FOR RELATIONS TABLE FOR DO NOT DUPLICATE RECORDS WHEN CRON RUNS
 
   //?REPLACE INTO table(id,population)
