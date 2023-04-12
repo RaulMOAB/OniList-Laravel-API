@@ -82,13 +82,13 @@ function getStaff(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $remain = 0;
+  $totalPages = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    usleep(800000);
+    usleep(666666);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -109,9 +109,9 @@ function getStaff(GuzzleHttp\Client $http): array
     }
 
     $raw_data_staffs = json_decode((string) $response->getBody(), true);
+    $totalPages++;
+    echo $totalPages . '-';
 
-    $remain = (int)$response->getHeader('X-RateLimit-Remaining')[0];
-    echo $remain;
     $raw_staffs = $raw_data_staffs['data']['Page']['staff'];
     foreach ($raw_staffs as $value) {
 
@@ -239,13 +239,13 @@ function getMedias(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $remain = 0;
+  $totalPages = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    usleep(800000);
+    usleep(666666);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -264,14 +264,14 @@ function getMedias(GuzzleHttp\Client $http): array
         ]
       ]);
     }
+    $totalPages = $totalPages++;
+    echo $totalPages . '-';
 
     $raw_data_media = json_decode((string) $response->getBody(), true);
 
-    $remain = (int) $response->getHeader('X-RateLimit-Remaining')[0];
 
     $raw_medias = $raw_data_media['data']['Page']['media'];
 
-    echo 'Request remaining: ' . $remain;
 
     foreach ($raw_medias as $value) {
       //startDate
@@ -377,12 +377,12 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-
+  $totalPages = 0;
   do {
     $variables = [
       "page" => $currentPage
     ];
-    usleep(800000);
+    usleep(666666);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -401,7 +401,8 @@ function getPersonDubCharacter(GuzzleHttp\Client $http): array
         ]
       ]);
     }
-
+    $totalPages++;
+    echo $totalPages . '-';
     $raw_data_persons = json_decode((string) $response->getBody(), true);
 
     $raw_persons = $raw_data_persons['data']['Page']['staff'];
@@ -454,12 +455,13 @@ function getMediaRelation(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
+  $totalPages = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    usleep(8000000);
+    usleep(666666);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -478,7 +480,8 @@ function getMediaRelation(GuzzleHttp\Client $http): array
         ]
       ]);
     }
-
+    $totalPages++;
+    echo $totalPages . '-';
     $raw_media_relations = json_decode((string) $response->getBody(), true);
 
     $raw_relations = $raw_media_relations['data']['Page']['media'];
@@ -551,12 +554,13 @@ function getCharacter(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
+  $totalPages = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    usleep(800000);
+    usleep(666666);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -575,7 +579,8 @@ function getCharacter(GuzzleHttp\Client $http): array
         ]
       ]);
     }
-
+    $totalPages++;
+    echo $totalPages . '-';
     $raw_data_characters = json_decode((string) $response->getBody(), true);
 
     $raw_characters = $raw_data_characters['data']['Page']['characters'];
@@ -668,13 +673,13 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-  $remain = 0;
+  $totalPages = 0;
 
   do {
     $variables = [
       "page" => $currentPage
     ];
-    usleep(8000000);
+    usleep(666666);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -693,7 +698,8 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
         ]
       ]);
     }
-
+    $totalPages++;
+    echo $totalPages.'-';
     $raw_works_in = json_decode((string) $response->getBody(), true);
     $raw_people_works_in = $raw_works_in['data']['Page']['staff'];
 
@@ -749,12 +755,12 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array
 
   $hasNextPage = true;
   $currentPage = 1;
-
+  $totalPages = 0;
   do {
     $variables = [
       "page" => $currentPage
     ];
-    usleep(800000);
+    usleep(666666);
     try {
 
       $response = $http->post('https://graphql.anilist.co', [
@@ -773,7 +779,8 @@ function getCharacterAppearsIn(GuzzleHttp\Client $http): array
         ]
       ]);
     }
-
+    $totalPages++;
+    echo $totalPages . '-';
     $raw_data_charactersAppearsIn = json_decode((string) $response->getBody(), true);
 
     $raw_charactersAppearsIn = $raw_data_charactersAppearsIn['data']['Page']['characters'];
