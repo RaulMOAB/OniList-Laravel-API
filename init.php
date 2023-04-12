@@ -571,7 +571,7 @@ function getCharacter(GuzzleHttp\Client $http): array
       ]);
     } catch (Exception $e) {
       echo 'exception...';
-      sleep(500);
+      sleep(60);
       $response = $http->post('https://graphql.anilist.co', [
         'json' => [
           'query' => $query,
@@ -1014,13 +1014,11 @@ function main()
   $http = new GuzzleHttp\Client;
 
   ###INSERTIONS###
-
-  
-  echo 'media action';
+  //echo 'media action';
   #Media insertion
-  $media_array_data = getMedias($http);
-  insertMedias($db, $media_array_data);
-  sleep(60);
+  //$media_array_data = getMedias($http);
+  //insertMedias($db, $media_array_data);
+  //sleep(60);
 
   echo 'character action';
   #Character insertion
@@ -1039,7 +1037,7 @@ function main()
   $medias_relations = getMediaRelation($http);
   insertMediaRelations($db, $medias_relations);
   sleep(60);
-  
+
   #Staff insertion
   echo 'staff action';
   $staff_array_data = getStaff($http);
