@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return 'Hello World';
 });
+
+Route::get('/', [MediaController::class, 'popularAnime']);
+Route::get('/anime', [MediaController::class, 'popularAnime']);
+Route::get('/manga', [MediaController::class, 'popularManga']);
+Route::get('/trending/anime', [MediaController::class, 'trendingAnime']);
+Route::get('/trending/manga', [MediaController::class, 'trendingManga']);

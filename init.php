@@ -170,8 +170,7 @@ function getStaff(GuzzleHttp\Client $http): array
 
     $currentPage++;
     $hasNextPage = $raw_data_staffs['data']['Page']['pageInfo']['hasNextPage'];
-
-  } while ($totalPages<=2000);
+  } while ($totalPages <= 2000);
 
 
   return $staffs;
@@ -701,7 +700,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
       ]);
     }
     $totalPages++;
-    echo $totalPages.'-';
+    echo $totalPages . '-';
     $raw_works_in = json_decode((string) $response->getBody(), true);
     $raw_people_works_in = $raw_works_in['data']['Page']['staff'];
 
@@ -720,7 +719,7 @@ function getPeopleWorksIn(GuzzleHttp\Client $http): array
     }
     $currentPage++;
     $hasNextPage = $raw_works_in['data']['Page']['pageInfo']['hasNextPage'];
-  } while ($totalPages<=2000);
+  } while ($totalPages <= 2000);
 
   return $people_works_in;
 }
@@ -845,7 +844,7 @@ function insertStaffs(PDO $db, array $staffs)
       ':image_medium'   => $staff['image_medium'],
     ]);
     $index++;
-    echo ' insert numero:'.$index.' ';
+    echo ' insert numero:' . $index . ' ';
   }
 }
 
@@ -952,14 +951,14 @@ function insertPersonDubCharacter(PDO $db, array $persons_dub_array)
 
   $index = 0;
   foreach ($persons_dub_array as $person_dub) {
-    try{
+    try {
       $insert_statement->execute([
         ':people_id' => $person_dub['people_id'],
         ':character_id' => $person_dub['character_id'],
       ]);
       $index++;
       echo ' insert numero:' . $index . ' ';
-    }catch(PDOException $e){
+    } catch (PDOException $e) {
       echo ' NO EXISTE ';
       continue;
     }
@@ -977,14 +976,14 @@ function insertPeopleWorksIn(PDO $db, array $people_works_in)
 
   $index = 0;
   foreach ($people_works_in as $value) {
-    try{
+    try {
       $insert_statement->execute([
         ':person_id' => $value['person_id'],
         ':media_id' => $value['media_id']
       ]);
       $index++;
       echo ' insert numero:' . $index . ' ';
-    }catch(PDOException $e){
+    } catch (PDOException $e) {
       echo ' NO EXISTE ';
       continue;
     }
@@ -1040,8 +1039,8 @@ function main()
   echo 'appears_in action';
   #character_appears_in insertion
   $characterAppearsIn_array_data = getCharacterAppearsIn($http);
-  insertCharacterAppearsIn($db,$characterAppearsIn_array_data);
-  
+  insertCharacterAppearsIn($db, $characterAppearsIn_array_data);
+
   echo 'related_to action';
   #related_to insertion
   $medias_relations = getMediaRelation($http);
