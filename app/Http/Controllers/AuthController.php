@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -15,17 +16,28 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        // $request->validate([
+        //     'email' => 'required|string|email',
+        //     'password' => 'required|string',
+        // ]);
+
         $credentials = $request->only('email', 'password');
 
+
         $token = Auth::attempt($credentials);
+    
+
+        // return response()->json([
+        //     'token' => $token,
+        //     'email' => $request['email'],
+        //     'password' => $request['password'],
+        //     'user' => $user
+        // ]);
+
         if (!$token) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unauthorized',
+                'message' => 'Incorrect credentials',
             ], 401);
         }
 
