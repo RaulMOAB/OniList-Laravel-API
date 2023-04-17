@@ -16,15 +16,19 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // $request->validate([
-        //     'email' => 'required|string|email',
-        //     'password' => 'required|string',
-        // ]);
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
 
         $credentials = $request->only('email', 'password');
 
 
-        $token = Auth::attempt($credentials);
+        //$token = Auth::attempt($credentials);
+
+        $myTTL = 1; //minutes
+        JWTAuth::factory()->setTTL($myTTL);
+        $token = JWTAuth::attempt($credentials);
     
 
         // return response()->json([
@@ -81,6 +85,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+        
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',
