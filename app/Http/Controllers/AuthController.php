@@ -50,7 +50,7 @@ class AuthController extends Controller
         return response()->json([
                 'status' => 'success',
                 'user' => $user,
-                'authorisation' => [
+                'auth' => [
                     'token' => $token,
                     'type' => 'bearer',
                 ]
