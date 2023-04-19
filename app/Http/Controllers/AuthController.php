@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -26,7 +27,7 @@ class AuthController extends Controller
 
         //$token = Auth::attempt($credentials);
 
-        $myTTL = 1; //minutes
+        $myTTL = 90; //minutes
         JWTAuth::factory()->setTTL($myTTL);
         $token = JWTAuth::attempt($credentials);
     
@@ -44,7 +45,7 @@ class AuthController extends Controller
                 'message' => 'Incorrect credentials',
             ], 401);
         }
-
+        
         $user = Auth::user();
         return response()->json([
                 'status' => 'success',
