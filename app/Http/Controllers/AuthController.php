@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 use App\Models\User;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
@@ -60,26 +61,27 @@ class AuthController extends Controller
 
     public function register(Request $request){
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'username'      => ['required', 'string', 'max:255'],
+            'email'     => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'  => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => "registered_user",
         ]);
 
-        $token = Auth::login($user);
+        // $token = Auth::login($user);
         return response()->json([
             'status' => 'success',
             'message' => 'User created successfully',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
+            'user' => $user
+            // 'authorisation' => [
+            //     'token' => $token,
+            //     'type' => 'bearer',
+            // ]
         ]);
     }
 
