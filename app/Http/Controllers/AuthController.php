@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         $myTTL = 90; //minutes
         JWTAuth::factory()->setTTL($myTTL);
-        $token = JWTAuth::attempt($credentials);
+        $token = JWTAuth::attempt($credentials);//?Devuelve el token
     
 
         // return response()->json([
@@ -62,7 +62,7 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6',//TODO aumentar seguridad haciendo obligatorio una MAYUS y/o un num
         ]);
 
         $user = User::create([

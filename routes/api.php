@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
+});
 
+Route::controller(AccountController::class)->group(function () {
+    Route::post('/account/delete/{id}', 'destroy');
 });
 
 Route::get('/', [MediaController::class, 'popularAnime']);
