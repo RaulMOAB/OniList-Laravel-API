@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
@@ -62,7 +63,12 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',//TODO aumentar seguridad haciendo obligatorio una MAYUS y/o un num
+            'password' => ['required', Password::min(8)
+            ->mixedCase() // Uppercase and Lowercase
+            ->letters()   // Letters
+            ->numbers()   // Number
+            ->symbols(),  // Character Non-alphanumeric
+                ],
         ]);
 
         $user = User::create([
