@@ -78,15 +78,19 @@ class AuthController extends Controller
             'role' => "registered_user",
         ]);
 
-        // $token = Auth::login($user);
+        $credentials = $request->only('email', 'password');
+        $myTTL = 90; //minutes
+        JWTAuth::factory()->setTTL($myTTL);
+        $token = JWTAuth::attempt($credentials);
+
         return response()->json([
             'status' => 'success',
             'message' => 'User created successfully',
-            'user' => $user
-            // 'authorisation' => [
-            //     'token' => $token,
-            //     'type' => 'bearer',
-            // ]
+            'user' => $user,
+            'auth' => [
+               'token' => $token,
+             'type' => 'bearer',
+            ]
         ]);
     }
 
