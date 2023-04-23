@@ -37,3 +37,6 @@ Route::get('/anime', [MediaController::class, 'popularAnime']);
 Route::get('/manga', [MediaController::class, 'popularManga']);
 Route::get('/trending/anime', [MediaController::class, 'trendingAnime']);
 Route::get('/trending/manga', [MediaController::class, 'trendingManga']);
+
+Route::get('/send/{email}',[MailController::class, 'index']);
+// Route::post('/verifyMail',[MailController::class, 'verifyMail']);

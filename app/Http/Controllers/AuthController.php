@@ -59,39 +59,58 @@ class AuthController extends Controller
 
     }
 
-        public function register(Request $request){
-        $request->validate([
-            'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', Password::min(8)
-            ->mixedCase() // Uppercase and Lowercase
-            ->letters()   // Letters
-            ->numbers()   // Number
-            ->symbols(),  // Character Non-alphanumeric
-                ],
-        ]);
+    public function register(Request $request){
 
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => "registered_user",
-        ]);
+        $count = User::where('email', $request->email)->count();
 
-        $credentials = $request->only('email', 'password');
-        $myTTL = 90; //minutes
-        JWTAuth::factory()->setTTL($myTTL);
-        $token = JWTAuth::attempt($credentials);
+        if ($count > 0) {
+            return response()->json(['This account has been created']);
+        }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'auth' => [
-               'token' => $token,
-             'type' => 'bearer',
-            ]
-        ]);
+        //TODO delete row in 1 hour (secondary)
+
+        $verify_account = MailController::verifyMail($request->email, $request->code);
+
+        if ($verify_account) 
+        {
+            $request->validate([
+                'username' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => ['required', Password::min(8)
+                ->mixedCase() // Uppercase and Lowercase
+                ->letters()   // Letters
+                ->numbers()   // Number
+                ->symbols(),  // Character Non-alphanumeric
+                    ],
+            ]);
+    
+            $user = User::create([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => "registered_user",
+            ]);
+
+            $delete_verified_mail = Verify::where('email', $request->email)->delete();
+    
+            $credentials = $request->only('email', 'password');
+            $myTTL = 90; //minutes
+            JWTAuth::factory()->setTTL($myTTL);
+            $token = JWTAuth::attempt($credentials);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User created successfully',
+                'user' => $user,
+                'auth' => [
+                   'token' => $token,
+                 'type' => 'bearer',
+                ]
+            ]);
+        }
+        else{
+            return response()->json(['Codigo incorrecto']);
+        }
     }
 
     public function logout()
