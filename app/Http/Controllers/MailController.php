@@ -38,7 +38,10 @@ class MailController extends Controller
         try 
         {
             Mail::to($email)->send(new MailNotify($data));
-            return response()->json(['Check verification code in your mail box']);
+            return response()->json([
+                'message' => 'Check verification code in your mail box',
+                'status' => 'success',
+            ]);
 
         } catch (Exception $th) 
         {

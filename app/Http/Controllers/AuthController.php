@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
+use App\Models\Verify;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use App\Http\Controllers\MailController;
 
 class AuthController extends Controller
 {
@@ -61,11 +63,11 @@ class AuthController extends Controller
 
     public function register(Request $request){
 
-        $count = User::where('email', $request->email)->count();
+        // $count = User::where('email', $request->email)->count();
 
-        if ($count > 0) {
-            return response()->json(['This account has been created']);
-        }
+        // if ($count > 0) {
+        //     return response()->json(['This account has been created']);
+        // }
 
         //TODO delete row in 1 hour (secondary)
 
@@ -102,6 +104,7 @@ class AuthController extends Controller
                 'status' => 'success',
                 'message' => 'User created successfully',
                 'user' => $user,
+                'registered' => true,
                 'auth' => [
                    'token' => $token,
                  'type' => 'bearer',
@@ -109,7 +112,11 @@ class AuthController extends Controller
             ]);
         }
         else{
-            return response()->json(['Codigo incorrecto']);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Codigo incorrecto',
+                'registered' => false,
+            ]);
         }
     }
 
