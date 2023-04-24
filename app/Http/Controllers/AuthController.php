@@ -63,12 +63,6 @@ class AuthController extends Controller
 
     public function register(Request $request){
 
-        // $count = User::where('email', $request->email)->count();
-
-        // if ($count > 0) {
-        //     return response()->json(['This account has been created']);
-        // }
-
         //TODO delete row in 1 hour (secondary)
 
         $verify_account = MailController::verifyMail($request->email, $request->code);
@@ -113,9 +107,10 @@ class AuthController extends Controller
         }
         else{
             return response()->json([
-                'status' => 'success',
-                'message' => 'Codigo incorrecto',
+                'status' => 'failed',
+                'message' => 'Invalid code',
                 'registered' => false,
+                'code' => $request->code,
             ]);
         }
     }
