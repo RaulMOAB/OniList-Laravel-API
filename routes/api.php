@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LibraryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MediaController;
@@ -42,3 +43,5 @@ Route::get('/anime/{id}', [MediaController::class, 'show']);
 
 Route::get('/send/{email}', [MailController::class, 'index']);
 // Route::post('/verifyMail',[MailController::class, 'verifyMail']);
+
+Route::get('/library/{id}',[LibraryController::class, 'libraryInfo']);
