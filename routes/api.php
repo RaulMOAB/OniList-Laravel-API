@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,7 @@ Route::get('/anime', [MediaController::class, 'popularAnime']);
 Route::get('/manga', [MediaController::class, 'popularManga']);
 Route::get('/trending/anime', [MediaController::class, 'trendingAnime']);
 Route::get('/trending/manga', [MediaController::class, 'trendingManga']);
+Route::get('/anime/{id}', [MediaController::class, 'show']);
 
-Route::get('/send/{email}',[MailController::class, 'index']);
+Route::get('/send/{email}', [MailController::class, 'index']);
 // Route::post('/verifyMail',[MailController::class, 'verifyMail']);
