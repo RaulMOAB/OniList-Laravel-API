@@ -43,5 +43,7 @@ Route::get('/anime/{id}', [MediaController::class, 'show']);
 
 Route::get('/send/{email}', [MailController::class, 'index']);
 // Route::post('/verifyMail',[MailController::class, 'verifyMail']);
+Route::get('/account/{id}', [AccountController::class, 'show']);
+
 
 Route::get('/library/{id}',[LibraryController::class, 'libraryInfo']);
