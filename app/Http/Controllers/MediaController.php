@@ -174,4 +174,44 @@ class MediaController extends Controller
 
     return response()->json($media);
   }
+
+  public function filteredMedia(Request $request){
+
+    $media = new Media();
+
+    $media = $media->select('*');
+
+    if(isset($request->search)){
+      $media = $media->where('title','LIKE','%'. $request->search . '%');
+    }
+
+    if(isset($request->genres)){
+      $media = $media->where('genres', 'LIKE','%'. $request->genres . '%' );
+    }
+
+    if(isset($request->season_year)){
+      $media = $media->where('season_year', $request->season_year );
+    }
+
+    if(isset($request->season)){
+      $media = $media->where('season', $request->season );
+    }
+
+    if(isset($request->format)){
+      $media = $media->where('format', $request->format );
+    }
+
+    if(isset($request->airing_status)){
+      $media = $media->where('airing_status', $request->airing_status );
+    }
+
+    $media = $media->paginate(10);
+
+    return response()->json([
+      'media_length' => count($media),
+      'message' => 'Media successfully fetched',
+      'data' => $media,
+    ],200);
+
+  }
 }
