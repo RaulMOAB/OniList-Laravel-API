@@ -19,9 +19,7 @@ use App\Http\Controllers\MailController;
 |
 */
 
-Route::get('/user', function (Request $request) {
-    return 'Hello World';
-});
+Route::get('/user/{id}', [AccountController::class, 'show']);
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');

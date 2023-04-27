@@ -21,12 +21,12 @@ return new class extends Migration
             $table->foreignId('media_id');
             $table->enum('status',['WATCHING', 'PLAN TO WATCH', 'COMPLETED', 'REWATCHING', 'PAUSED', 'DROPPED'] );
             $table->integer('rate')->nullable();
-            $table->integer('progress');
-            $table->date('start_date');
+            $table->integer('progress')->nullable();
+            $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->integer('rewatches');
-            $table->longText('notes');
-            $table->boolean('favorite');
+            $table->integer('rewatches')->nullable();
+            $table->longText('notes')->nullable();
+            $table->boolean('favorite')->default(false);
             $table->boolean('private')->nullable();
             $table->timestamps();
 

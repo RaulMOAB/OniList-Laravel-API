@@ -13,21 +13,23 @@ class LibraryController extends Controller
     {
         //$this->middleware('auth:api');
     }
-    public function libraryInfo(string $user_id)
+    public function libraryInfo(string $username)
     {
-        $user = User::find($user_id);
+        $user = User::where('username', $username)->first();
         $subscribed_media = $user->medias()->get(['media_id','title',
             'extra_large_cover_image',
             'large_cover_image',
             'medium_cover_image',
             'banner_image',
             'episodes',
-            'airing_status'
+            'airing_status',
+            'type'
         ]);
 
         $final_data = [];
+
         foreach ($subscribed_media as $media) {
-            $status = UserSubscribe::where('user_id',$user_id)->where('media_id',$media->media_id)->get();
+            $status = UserSubscribe::where('user_id',$user->id)->where('media_id',$media->media_id)->get();
             $subscribed_media_status = ['media' => $media, 'status' => $status];
             array_push($final_data, $subscribed_media_status);
         }
