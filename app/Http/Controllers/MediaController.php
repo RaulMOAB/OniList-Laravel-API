@@ -205,7 +205,7 @@ class MediaController extends Controller
       $media = $media->where('airing_status', $request->airing_status );
     }
 
-    $media = $media->paginate(12);
+    $media = $media->paginate(18);
 
     return response()->json([
       'status' => 'success',
