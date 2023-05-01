@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 
 class LibraryController extends Controller
-{   
+{
     const MEDIA_STATUS = ['WATCHING', 'PLAN TO WATCH', 'COMPLETED', 'REWATCHING', 'PAUSED', 'DROPPED'];
 
     public function __construct()
@@ -16,7 +16,8 @@ class LibraryController extends Controller
         $this->middleware('auth:api', ['except' => ['getMediaStatus', 'setMediaStatus']]);
     }
 
-    public function animeList(string $username){
+    public function animeList(string $username)
+    {
         $user = User::where('username', $username)->first();
         $subscribed_media = $user->medias()->where('type', 'ANIME')->get([
             'media_id',
@@ -60,7 +61,7 @@ class LibraryController extends Controller
         $final_data = [];
 
         foreach ($subscribed_media as $media) {
-            $status = UserSubscribe::where('user_id',$user->id)->where('media_id',$media->media_id)->get();
+            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->get();
             $subscribed_media_status = ['media' => $media, 'status' => $status];
             array_push($final_data, $subscribed_media_status);
         }
@@ -92,5 +93,24 @@ class LibraryController extends Controller
             $error_msg = "Error: Attempted to update " . $request->id . " but SELECT failed.";
             return response($error_msg, 204); //*1 respuesta OK 0 respuesta mala
         }
+    }
+
+    public function insertOrUpdateMediaData(Request $request)
+    {
+        //print_r($request);
+        $entry = UserSubscribe::updateOrCreate(
+            ['user_id' => $request->user, 'media_id' => $request->media_id],
+            ['status' => $request->status],
+            ['rate' => $request->rate],
+            ['progress' => $request->progress],
+            ['start_date' => $request->startDate],
+            ['end_date' => $request->endDate],
+            ['rewatches' => $request->rewatches],
+            ['notes' => $request->notes],
+            ['favourite' => $request->favourite],
+            ['private' => $request->private],
+        );
+
+        return response()->json($entry);
     }
 }

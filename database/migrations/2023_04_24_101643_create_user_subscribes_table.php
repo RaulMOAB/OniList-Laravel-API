@@ -10,21 +10,21 @@ return new class extends Migration
      * Run the migrations.
      */
 
-    
+
 
     public function up(): void
     {
-        
+
         Schema::create('user_subscribes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('media_id');
-            $table->enum('status',['WATCHING', 'PLAN TO WATCH', 'COMPLETED', 'REWATCHING', 'PAUSED', 'DROPPED'] );
-            $table->integer('rate')->nullable();
-            $table->integer('progress')->nullable();
+            $table->enum('status', ['WATCHING', 'PLAN TO WATCH', 'COMPLETED', 'REWATCHING', 'PAUSED', 'DROPPED']);
+            $table->integer('rate')->default(0)->nullable();
+            $table->integer('progress')->default(0)->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->integer('rewatches')->nullable();
+            $table->integer('rewatches')->default(0)->nullable();
             $table->longText('notes')->nullable();
             $table->boolean('favorite')->default(false);
             $table->boolean('private')->nullable(false);
