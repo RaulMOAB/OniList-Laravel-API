@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use App\Models\Verify;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\MailController;
 
@@ -26,12 +27,6 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
-
-
-        //$token = Auth::attempt($credentials);
-
-        $myTTL = 90; //minutes
-        JWTAuth::factory()->setTTL($myTTL);
         $token = JWTAuth::attempt($credentials);//?Devuelve el token
     
 
@@ -57,7 +52,7 @@ class AuthController extends Controller
                     'token' => $token,
                     'type' => 'bearer',
                 ]
-            ]);
+            ])->withCookie(cookie('token',$token,60));
 
     }
 
@@ -115,14 +110,14 @@ class AuthController extends Controller
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::logout();
-        
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Successfully logged out',
-        ]);
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return response()->json(['message' => 'Logout successful'], 200);
+        } catch (JWTException $exception) {
+            return response()->json(['message' => 'Unable to logout'], 500);
+        }
     }
 
     public function refresh()
