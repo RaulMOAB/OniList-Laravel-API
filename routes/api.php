@@ -37,8 +37,10 @@ Route::get('/anime', [MediaController::class, 'popularAnime']);
 Route::get('/manga', [MediaController::class, 'popularManga']);
 Route::get('/trending/anime', [MediaController::class, 'trendingAnime']);
 Route::get('/trending/manga', [MediaController::class, 'trendingManga']);
+Route::get('/upcoming/anime', [MediaController::class, 'upcomingAnime']);
+Route::get('/upcoming/manga', [MediaController::class, 'upcomingManga']);
 Route::get('/anime/{id}', [MediaController::class, 'show']);
-Route::post('/search/anime', [MediaController::class, 'filteredMedia']); //poner metodo post
+Route::post('/search/anime', [MediaController::class, 'filteredMedia']);
 
 
 Route::get('/send/{email}', [MailController::class, 'index']);

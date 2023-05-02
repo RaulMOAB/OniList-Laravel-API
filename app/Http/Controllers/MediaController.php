@@ -51,117 +51,74 @@ class MediaController extends Controller
    */
   public function popularAnime()
   {
-    $popular_media_query = '
-        query ($type: MediaType, $page: Int){
-        Page(page: $page) {
-            pageInfo {
-              hasNextPage
-            }
-            media(type: $type, sort:POPULARITY_DESC) {
-              id
-            }
-          }
-        }
-        ';
-    // $trending_media_query = '
-    // query ($type: MediaType, $page: Int){
-    // Page(page: $page) {
-    //     pageInfo {
-    //       hasNextPage
-    //     }
-    //     media(type: $type, sort: TRENDING_DESC) {
-    //       id
-    //     }
-    //   }
-    // }
-    // ';
-    $anime_type = 'ANIME';
-    //$manga_type = 'MANGA';
-    $popular_animes = $this->getPopularMedias($popular_media_query, $anime_type);
-    // $popular_mangas = $this->getPopularMedias($popular_media_query, $manga_type);
-    // $trending_animes = $this->getPopularMedias($trending_media_query, $anime_type);
-    // $trending_mangas = $this->getPopularMedias($trending_media_query, $manga_type);
+    $popular_animes=Media::where('season', 'SPRING')->where('type', 'ANIME')->paginate(6);
 
-    // $popular_medias = [
-    //     'anime' => $popular_animes,
-    //     'manga' => $popular_mangas
-    // ];
-    // $trending_medias = [
-    //     'anime' => $trending_animes,
-    //     'manga' => $trending_mangas
-    // ];
-
-    // return $result = [
-    //     'popular_medias' => $popular_medias,
-    //     'trending_medias' => $trending_medias
-    // ];
-
-    return $popular_animes;
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($popular_animes),
+      'message' => 'Media successfully fetched',
+      'data' => $popular_animes,
+    ],200);
   }
 
   public function popularManga()
   {
-    $popular_media_query = '
-        query ($type: MediaType, $page: Int){
-        Page(page: $page) {
-            pageInfo {
-              hasNextPage
-            }
-            media(type: $type, sort:POPULARITY_DESC) {
-              id
-            }
-          }
-        }
-        ';
+    $popular_mangas=Media::where('season', 'SPRING')->where('type', 'MANGA')->paginate(6);
 
-    $manga_type = 'MANGA';
-
-    $popular_mangas = $this->getPopularMedias($popular_media_query, $manga_type);
-
-    return $popular_mangas;
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($popular_mangas),
+      'message' => 'Media successfully fetched',
+      'data' => $popular_mangas,
+    ],200);
   }
 
   public function trendingAnime()
   {
-    $trending_media_query = '
-        query ($type: MediaType, $page: Int){
-        Page(page: $page) {
-            pageInfo {
-              hasNextPage
-            }
-            media(type: $type, sort: TRENDING_DESC) {
-              id
-            }
-          }
-        }
-        ';
-    $anime_type = 'ANIME';
+    $trending_animes = Media::where('type', 'ANIME')->paginate(6);
 
-    $trending_animes = $this->getPopularMedias($trending_media_query, $anime_type);
-
-    return $trending_animes;
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($trending_animes),
+      'message' => 'Media successfully fetched',
+      'data' => $trending_animes,
+    ],200);
   }
 
   public function trendingManga()
   {
-    $trending_media_query = '
-        query ($type: MediaType, $page: Int){
-        Page(page: $page) {
-            pageInfo {
-              hasNextPage
-            }
-            media(type: $type, sort: TRENDING_DESC) {
-              id
-            }
-          }
-        }
-        ';
+    $trending_mangas = Media::where('type', 'MANGA')->paginate(6);
 
-    $manga_type = 'MANGA';
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($trending_mangas),
+      'message' => 'Media successfully fetched',
+      'data' => $trending_mangas,
+    ],200);
+  }
 
-    $trending_mangas = $this->getPopularMedias($trending_media_query, $manga_type);
+  public function upcomingAnime()
+  {
+    $upcoming_animes=Media::where('season_year', 2024)->where('type', 'ANIME')->paginate(6);
 
-    return $trending_mangas;
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($upcoming_animes),
+      'message' => 'Media successfully fetched',
+      'data' => $upcoming_animes,
+    ],200);
+  }
+
+  public function upcomingManga()
+  {
+    $upcoming_mangas=Media::where('season_year', 2024)->where('type', 'MANGA')->paginate(6);
+
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($upcoming_mangas),
+      'message' => 'Media successfully fetched',
+      'data' => $upcoming_mangas,
+    ],200);
   }
 
 
