@@ -26,8 +26,8 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->integer('rewatches')->default(0)->nullable();
             $table->longText('notes')->nullable();
-            $table->boolean('favorite')->default(false);
-            $table->boolean('private')->nullable(false);
+            $table->boolean('favorite')->default(0)-<nullable();
+            $table->boolean('private')->default(0)->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')

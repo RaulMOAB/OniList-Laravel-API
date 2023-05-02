@@ -82,16 +82,21 @@ class LibraryController extends Controller
 
     public function setMediaStatus(Request $request)
     {
-        $num_rows = UserSubscribe::where('user_id', $request->user_id)
-            ->where('media_id', $request->id)
-            ->update(['status' => $request->status]);
+        // $num_rows = UserSubscribe::where('user_id', $request->user_id)
+        //     ->where('media_id', $request->id)
+        //     ->update(['status' => $request->status]);
 
-        if ($num_rows === 1) {
-            $success_msg = $num_rows . " rows updated.";
-            return response()->json($request->status, 200); //*1 respuesta OK 0 respuesta mala           
+        $media_status = UserSubscribe::updateOrCreate(
+            ['user_id' => $request->user_id, 'media_id' => $request->media_id],
+            ['status' => $request->status]
+        );
+
+        if ($media_status) {
+            $success_msg = $media_status . " rows updated.";
+            return response()->json(["message" => $success_msg]); //*1 respuesta OK 0 respuesta mala           
         } else {
-            $error_msg = "Error: Attempted to update " . $request->id . " but SELECT failed.";
-            return response($error_msg, 204); //*1 respuesta OK 0 respuesta mala
+            $error_msg = "Error: Attempted to update " . $request->media_id . " but SELECT failed.";
+            return response(["message" => $media_status]); //*1 respuesta OK 0 respuesta mala
         }
     }
 
@@ -100,15 +105,15 @@ class LibraryController extends Controller
         //print_r($request);
         $entry = UserSubscribe::updateOrCreate(
             ['user_id' => $request->user, 'media_id' => $request->media_id],
-            ['status' => $request->status],
-            ['rate' => $request->rate],
-            ['progress' => $request->progress],
-            ['start_date' => $request->startDate],
-            ['end_date' => $request->endDate],
-            ['rewatches' => $request->rewatches],
-            ['notes' => $request->notes],
-            ['favourite' => $request->favourite],
-            ['private' => $request->private],
+            ['status' => $request->status, 'rate' => $request->rate, 'progress' => $request->progress, 'start_date' => $request->startDate, 'end_date' => $request->endDate, 'rewatches' => $request->rewatches, 'notes' => $request->notes, 'favorite' => $request->favorite, 'private' => $request->private],
+            // ['rate' => $request->rate],
+            // ['progress' => $request->progress],
+            // ['start_date' => $request->startDate],
+            // ['end_date' => $request->endDate],
+            // ['rewatches' => $request->rewatches],
+            // ['notes' => $request->notes],
+            // ['favourite' => $request->favourite],
+            // ['private' => $request->private],
         );
 
         return response()->json($entry);
