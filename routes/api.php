@@ -54,3 +54,5 @@ Route::get('/library/{username}/animelist', [LibraryController::class, 'animeLis
 Route::get('/status/{user_id}/{media_id}', [LibraryController::class, 'getMediaStatus']);
 Route::post('/status', [LibraryController::class, 'setMediaStatus']);
 Route::post('/media/data', [LibraryController::class, 'insertOrUpdateMediaData']);
+Route::post('/media/favorite', [LibraryController::class, 'insertOrUpdateFavorite']);
+Route::post('/media/delete', [LibraryController::class, 'deleteMedia']);
