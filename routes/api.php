@@ -55,4 +55,4 @@ Route::get('/status/{user_id}/{media_id}', [LibraryController::class, 'getMediaS
 Route::post('/status', [LibraryController::class, 'setMediaStatus']);
 Route::post('/media/data', [LibraryController::class, 'insertOrUpdateMediaData']);
 Route::post('/media/favorite', [LibraryController::class, 'insertOrUpdateFavorite']);
-Route::post('/media/delete', [LibraryController::class, 'deleteMedia']);
+Route::delete('/media/delete/{media_id}', [LibraryController::class, 'deleteMedia']);

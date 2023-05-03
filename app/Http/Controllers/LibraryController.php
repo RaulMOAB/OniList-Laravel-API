@@ -120,9 +120,10 @@ class LibraryController extends Controller
         return response()->json($entry);
     }
 
-    public function deleteMedia(Request $request)
+    public function deleteMedia($media_id)
     {
-        $media = UserSubscribe::where('user_id', $request->user_id)->where('media_id', $request->media_id)->delete();
+
+        $media = UserSubscribe::where('media_id', $media_id)->delete();
 
         return response()->json($media);
     }
