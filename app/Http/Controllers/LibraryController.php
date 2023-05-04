@@ -22,10 +22,42 @@ class LibraryController extends Controller
         $subscribed_media = $user->medias()->where('type', 'ANIME')->get([
             'media_id',
             'title',
+            'type',
             'extra_large_cover_image',
             'large_cover_image',
             'medium_cover_image',
             'banner_image',
+            'format',
+            'genres',
+            'airing_status',
+            'episodes',
+            'airing_status',
+        ]);
+
+        $anime_list_with_status = [];
+
+        foreach ($subscribed_media as $media) {
+            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->get();
+            $subscribed_media_status = ['media' => $media, 'status' => $status];
+            array_push($anime_list_with_status, $subscribed_media_status);
+        }
+
+        return response()->json($anime_list_with_status);
+    }
+    public function mangaList(string $username)
+    {
+        $user = User::where('username', $username)->first();
+        $subscribed_media = $user->medias()->where('type', 'MANGA')->get([
+            'media_id',
+            'title',
+            'type',
+            'extra_large_cover_image',
+            'large_cover_image',
+            'medium_cover_image',
+            'banner_image',
+            'format',
+            'genres',
+            'airing_status',
             'episodes',
             'airing_status',
         ]);
@@ -55,7 +87,6 @@ class LibraryController extends Controller
             'airing_status',
             'genres',
             'type',
-            'airing_status',
         ]);
 
         $final_data = [];
