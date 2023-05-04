@@ -119,7 +119,7 @@ class LibraryController extends Controller
 
         $media_status = UserSubscribe::updateOrCreate(
             ['user_id' => $request->user_id, 'media_id' => $request->media_id],
-            ['status' => $request->status]
+            ['status' => $request->status, 'favorite' => $request->favorite,]
         );
 
         if ($media_status) {
@@ -131,22 +131,31 @@ class LibraryController extends Controller
         }
     }
 
+    public function insertOrUpdateFavorite(Request $request)
+    {
+        $favorite = UserSubscribe::updateOrCreate(
+            ['user_id' => $request->user, 'media_id' => $request->media_id],
+            ['favorite' => $request->favorite]
+        );
+        return response()->json($favorite);
+    }
+
     public function insertOrUpdateMediaData(Request $request)
     {
         //print_r($request);
         $entry = UserSubscribe::updateOrCreate(
             ['user_id' => $request->user, 'media_id' => $request->media_id],
             ['status' => $request->status, 'rate' => $request->rate, 'progress' => $request->progress, 'start_date' => $request->startDate, 'end_date' => $request->endDate, 'rewatches' => $request->rewatches, 'notes' => $request->notes, 'favorite' => $request->favorite, 'private' => $request->private],
-            // ['rate' => $request->rate],
-            // ['progress' => $request->progress],
-            // ['start_date' => $request->startDate],
-            // ['end_date' => $request->endDate],
-            // ['rewatches' => $request->rewatches],
-            // ['notes' => $request->notes],
-            // ['favourite' => $request->favourite],
-            // ['private' => $request->private],
         );
 
         return response()->json($entry);
+    }
+
+    public function deleteMedia($media_id)
+    {
+
+        $media = UserSubscribe::where('media_id', $media_id)->delete();
+
+        return response()->json($media);
     }
 }
