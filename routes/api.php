@@ -51,6 +51,7 @@ Route::get('/account/{id}', [AccountController::class, 'show']);
 Route::get('/library/{username}', [LibraryController::class, 'libraryInfo']);
 Route::get('/library/{username}/animelist', [LibraryController::class, 'animeList']);
 Route::get('/library/{username}/mangalist', [LibraryController::class, 'mangaList']);
+Route::get('/library/{username}/favorites', [LibraryController::class, 'favoritesMedias']);
 
 Route::get('/status/{user_id}/{media_id}', [LibraryController::class, 'getMediaStatus']);
 Route::post('/status', [LibraryController::class, 'setMediaStatus']);

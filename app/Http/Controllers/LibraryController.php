@@ -72,6 +72,26 @@ class LibraryController extends Controller
 
         return response()->json($anime_list_with_status);
     }
+    public function favoritesMedias(string $username){
+        $user = User::where('username', $username)->first();
+        $subscribed_media = $user->medias()->get([
+            'media_id',
+            'title',
+            'type',
+            'extra_large_cover_image',
+            'large_cover_image',
+            'medium_cover_image',
+        ]);
+        $favorite_media_list_with_status = [];
+
+        foreach ($subscribed_media as $media) {
+            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->where('favorite',1)->get();
+            $subscribed_media_status = ['media' => $media, 'status' => $status];
+            array_push($favorite_media_list_with_status, $subscribed_media_status);
+        }
+
+        return response()->json($favorite_media_list_with_status);
+    }
     public function libraryInfo(string $username)
     {
         $user = User::where('username', $username)->first();
