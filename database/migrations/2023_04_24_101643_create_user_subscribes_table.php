@@ -19,7 +19,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('media_id');
-            $table->enum('status', ['WATCHING', 'PLAN TO WATCH', 'COMPLETED', 'REWATCHING', 'PAUSED', 'DROPPED']);
+            $table->enum('status', ['WATCHING', 'PLAN TO WATCH', 'COMPLETED', 'REWATCHING', 'PAUSED', 'DROPPED'])->default('WATCHING');
             $table->integer('rate')->default(0)->nullable();
             $table->integer('progress')->default(0)->nullable();
             $table->date('start_date')->nullable();

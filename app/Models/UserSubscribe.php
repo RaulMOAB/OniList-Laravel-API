@@ -16,11 +16,15 @@ class UserSubscribe extends Model
         'status',
         'rate',
         'progress',
-        'start_dat',
+        'start_date',
         'end_date',
         'rewatches',
         'notes',
         'favourite',
         'private'
     ];
+
+    // protected $casts = [
+    //     'start_date' => 'string'
+    // ];
 }
