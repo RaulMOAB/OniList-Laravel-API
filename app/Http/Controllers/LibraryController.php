@@ -120,9 +120,14 @@ class LibraryController extends Controller
         return response()->json($final_data);
     }
 
+
+    // public function getMediaData(string $user_id )
+    // {
+
+    // }
     public function getMediaStatus(string $user_id, string $media_id)
     {
-        $status = UserSubscribe::where('user_id', $user_id)->where('media_id', $media_id)->get(['status']);
+        $status = UserSubscribe::where('user_id', $user_id)->where('media_id', $media_id)->get();
 
         if (!$status) {
             return response()->json(null);
@@ -133,13 +138,9 @@ class LibraryController extends Controller
 
     public function setMediaStatus(Request $request)
     {
-        // $num_rows = UserSubscribe::where('user_id', $request->user_id)
-        //     ->where('media_id', $request->id)
-        //     ->update(['status' => $request->status]);
-
         $media_status = UserSubscribe::updateOrCreate(
             ['user_id' => $request->user_id, 'media_id' => $request->media_id],
-            ['status' => $request->status, 'favorite' => $request->favorite,]
+            ['status' => $request->status, 'favorite' => $request->favorite]
         );
 
         if ($media_status) {
@@ -153,19 +154,17 @@ class LibraryController extends Controller
 
     public function insertOrUpdateFavorite(Request $request)
     {
-        $favorite = UserSubscribe::updateOrCreate(
-            ['user_id' => $request->user, 'media_id' => $request->media_id],
-            ['favorite' => $request->favorite]
-        );
-        return response()->json($favorite);
+
+        $favorite = UserSubscribe::where('user_id', $request->user_id)->where('media_id', $request->media_id)->update(['favorite' => $request->favorite]);
+
+        return response()->json($request->favorite);
     }
 
     public function insertOrUpdateMediaData(Request $request)
     {
-        //print_r($request);
         $entry = UserSubscribe::updateOrCreate(
             ['user_id' => $request->user, 'media_id' => $request->media_id],
-            ['status' => $request->status, 'rate' => $request->rate, 'progress' => $request->progress, 'start_date' => $request->startDate, 'end_date' => $request->endDate, 'rewatches' => $request->rewatches, 'notes' => $request->notes, 'favorite' => $request->favorite, 'private' => $request->private],
+            ['status' => $request->status, 'rate' => $request->rate, 'progress' => $request->progress, 'start_date' => $request->start_date, 'end_date' => $request->endDate, 'rewatches' => $request->rewatches, 'notes' => $request->notes, 'favorite' => $request->favorite, 'private' => $request->private],
         );
 
         return response()->json($entry);
