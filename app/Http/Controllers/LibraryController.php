@@ -152,7 +152,7 @@ class LibraryController extends Controller
         }
     }
 
-    public function insertOrUpdateFavorite(Request $request)
+    public function insertFavorite(Request $request)
     {
 
         $favorite = UserSubscribe::where('user_id', $request->user_id)->where('media_id', $request->media_id)->update(['favorite' => $request->favorite]);

@@ -44,6 +44,7 @@ class MediaController extends Controller
 
     return $popular_medias;
   }
+  
 
 
   /**
