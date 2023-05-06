@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class UserSubscribe extends Model
 {
@@ -23,6 +25,16 @@ class UserSubscribe extends Model
         'favourite',
         'private'
     ];
+    public $timestamps = false;
+
+    protected function performUpdate(Builder $query)
+    {
+        if ($this->isDirty('status')) {
+            $this->setUpdatedAt($this->freshTimestamp());
+        }
+
+        return parent::performUpdate($query);
+    }
 
     // protected $casts = [
     //     'start_date' => 'string'

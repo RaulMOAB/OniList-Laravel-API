@@ -157,7 +157,7 @@ class LibraryController extends Controller
 
         $favorite = UserSubscribe::where('user_id', $request->user_id)->where('media_id', $request->media_id)->update(['favorite' => $request->favorite]);
 
-        return response()->json($request->favorite);
+        return response()->json($favorite);
     }
 
     public function insertOrUpdateMediaData(Request $request)
