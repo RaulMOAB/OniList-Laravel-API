@@ -43,4 +43,9 @@ class Media extends Model
     {
         return $this->belongsToMany(User::class, 'user_subscribes', 'user_id', 'media_id');
     }
+
+    public function related()
+    {
+        return $this->belongsToMany(Media::class,'related_to','media_id', 'related_media_id');
+    }
 }

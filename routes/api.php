@@ -7,6 +7,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\RelationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,5 +57,8 @@ Route::get('/library/{username}/favorites', [LibraryController::class, 'favorite
 Route::get('/status/{user_id}/{media_id}', [LibraryController::class, 'getMediaStatus']);
 Route::post('/status', [LibraryController::class, 'setMediaStatus']);
 Route::post('/media/data', [LibraryController::class, 'insertOrUpdateMediaData']);
-Route::post('/media/favorite', [LibraryController::class, 'insertOrUpdateFavorite']);
+Route::post('/media/favorite', [LibraryController::class, 'insertFavorite']);
 Route::delete('/media/delete/{media_id}', [LibraryController::class, 'deleteMedia']);
+
+//Media related to media
+Route::get('/{media_id}/relations', [RelationsController::class, 'getMediasRelatedTo']);
