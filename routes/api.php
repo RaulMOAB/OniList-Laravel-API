@@ -9,6 +9,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\RelationsController;
 use App\Http\Controllers\CharacterController;
+use App\Http\Controllers\PeopleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,3 +68,7 @@ Route::get('/{media_id}/relations', [RelationsController::class, 'getMediasRelat
 //Character
 Route::get('/characters/{character_id}', [CharacterController::class, 'getCharacters']);
 Route::get('/media/characters/{media_id}', [CharacterController::class, 'getCharacterAppearsMedia']);
+
+//Dubbers
+Route::get('/staff/{character_id}', [PeopleController::class, 'peopleDubCharacter']);
+Route::get('/media/staff/{staff_id}', [PeopleController::class, 'peopleDubCharacter']);

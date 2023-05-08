@@ -19,6 +19,15 @@ class CharacterController extends Controller
     {
         $character_appears_in = CharactersAppearsIn::where('media_id', $media_id)->get();
 
-        return response()->json($character_appears_in);
+        $final_data = [];
+
+        foreach ($character_appears_in as $character) {
+            $character_data = Character::where('id', $character["character_id"])->first();
+            $character_media_data = ['character' => $character, 'character_data' => $character_data];
+
+            array_push($final_data, $character_media_data);
+        }
+
+        return response()->json($final_data);
     }
 }

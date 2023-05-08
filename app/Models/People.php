@@ -6,31 +6,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-
-class Character extends Model
+class People extends Model
 {
     use HasFactory;
+    protected $table = 'people';
 
     protected $fillable = [
         'name',
         'romaji',
         'gender',
-        'birthday',
+        'date_of_birth',
+        'date_of_death',
         'age',
+        'years_active',
+        'home_town',
         'blood_type',
         'description',
         'image_large',
         'image_medium'
     ];
-    protected $table = 'characters';
 
-    public function medias(): BelongsToMany
+    public function characters(): BelongsToMany
     {
-        return $this->belongsToMany(Media::class, 'characters_appears_in', 'media_id', 'character_id');
-    }
-
-    public function people(): BelongsToMany
-    {
-        return $this->belongsToMany(People::class, 'person_dubs_character', 'person_id', 'character_id');
+        return $this->belongsToMany(Character::class, 'person_dubs_character', 'person_id', 'character_id');
     }
 }
