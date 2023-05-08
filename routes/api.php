@@ -37,13 +37,15 @@ Route::controller(AccountController::class)->group(function () {
 
 Route::get('/', [MediaController::class, 'popularAnime']);
 Route::get('/anime', [MediaController::class, 'popularAnime']);
+Route::get('/anime/top', [MediaController::class, 'topAnime']);
 Route::get('/manga', [MediaController::class, 'popularManga']);
 Route::get('/trending/anime', [MediaController::class, 'trendingAnime']);
 Route::get('/trending/manga', [MediaController::class, 'trendingManga']);
 Route::get('/upcoming/anime', [MediaController::class, 'upcomingAnime']);
 Route::get('/upcoming/manga', [MediaController::class, 'upcomingManga']);
 Route::get('/anime/{id}', [MediaController::class, 'show']);
-Route::post('/search/anime', [MediaController::class, 'filteredMedia']);
+Route::post('/search/anime', [MediaController::class, 'filteredMediaAnime']);
+Route::post('/search/manga', [MediaController::class, 'filteredMediaManga']);
 
 
 Route::get('/send/{email}', [MailController::class, 'index']);
