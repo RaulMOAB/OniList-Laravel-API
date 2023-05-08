@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 
 class Character extends Model
 {
@@ -11,10 +13,19 @@ class Character extends Model
 
     protected $fillable = [
         'name',
-        'romanji',
-        'pronuntation',
+        'romaji',
+        'gender',
+        'birthday',
+        'age',
+        'blood_type',
         'description',
-        'role',
+        'image_large',
+        'image_medium'
     ];
     protected $table = 'characters';
+
+    public function medias():BelongsToMany
+    {
+        return $this->belongsToMany(Media::class, 'characters_appears_in', 'media_id', 'character_id');
+    }
 }
