@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Character;
+use App\Models\Dubbers;
+use App\Models\People;
 use App\Models\CharactersAppearsIn;
 
 class CharacterController extends Controller
@@ -23,11 +25,15 @@ class CharacterController extends Controller
 
         foreach ($character_appears_in as $character) {
             $character_data = Character::where('id', $character["character_id"])->first();
-            $character_media_data = ['character' => $character, 'character_data' => $character_data];
-
+            $dubber = Dubbers::where('character_id', $character["character_id"])->first();
+            if($dubber){
+                $dubber_data = People::firstWhere('id',$dubber->person_id);
+            }
+            $character_media_data = ['character' => $character, 'character_data' => $character_data, 'dubber' => $dubber, 'dubber_data' => $dubber_data];
+            
             array_push($final_data, $character_media_data);
         }
-
         return response()->json($final_data);
+
     }
 }
