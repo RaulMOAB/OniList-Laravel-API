@@ -76,6 +76,6 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/media/characters/{media_id}', [CharacterController::class, 'getCharacterAppearsMedia']);
 
 //Dubbers
-Route::get('/staff/{character_id}', [PeopleController::class, 'peopleDubCharacter']);
-Route::get('/media/staff/{staff_id}', [PeopleController::class, 'peopleDubCharacter']);
-}
+// Route::get('/staff/{character_id}', [PeopleController::class, 'peopleDubCharacter']);
+// Route::get('/media/staff/{staff_id}', [PeopleController::class, 'peopleDubCharacter']);
+});
