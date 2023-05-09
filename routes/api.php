@@ -8,6 +8,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\RelationsController;
+use App\Http\Controllers\CharacterController;
+use App\Http\Controllers\PeopleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,13 +39,15 @@ Route::middleware(['cors'])->group(function () {
     
     Route::get('/', [MediaController::class, 'popularAnime']);
     Route::get('/anime', [MediaController::class, 'popularAnime']);
+    Route::get('/anime/top', [MediaController::class, 'topAnime']);
     Route::get('/manga', [MediaController::class, 'popularManga']);
     Route::get('/trending/anime', [MediaController::class, 'trendingAnime']);
     Route::get('/trending/manga', [MediaController::class, 'trendingManga']);
     Route::get('/upcoming/anime', [MediaController::class, 'upcomingAnime']);
     Route::get('/upcoming/manga', [MediaController::class, 'upcomingManga']);
     Route::get('/anime/{id}', [MediaController::class, 'show']);
-    Route::post('/search/anime', [MediaController::class, 'filteredMedia']);
+    Route::post('/search/anime', [MediaController::class, 'filteredMediaAnime']);
+    Route::post('/search/manga', [MediaController::class, 'filteredMediaManga']);
     
     
     Route::get('/send/{email}', [MailController::class, 'index']);
@@ -67,5 +71,12 @@ Route::middleware(['cors'])->group(function () {
     
     //Media related to media
     Route::get('/{media_id}/relations', [RelationsController::class, 'getMediasRelatedTo']);
+    //Character
+    Route::get('/characters/{character_id}', [CharacterController::class, 'getCharacters']);
+    Route::get('/media/characters/{media_id}', [CharacterController::class, 'getCharacterAppearsMedia']);
+
+    //Dubbers
+    Route::get('/staff/{character_id}', [PeopleController::class, 'peopleDubCharacter']);
+    Route::get('/media/staff/{staff_id}', [PeopleController::class, 'peopleDubCharacter']);
 });
 

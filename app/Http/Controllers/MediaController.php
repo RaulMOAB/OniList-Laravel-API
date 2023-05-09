@@ -173,4 +173,16 @@ class MediaController extends Controller
     ],200);
 
   }
+
+  public function topAnime() 
+  {
+    $top = Media::where('type', 'ANIME')->paginate(100);
+
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($top),
+      'message' => 'Media successfully fetched',
+      'data' => $top,
+    ],200);
+  }
 }
