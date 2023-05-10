@@ -37,16 +37,23 @@ Route::middleware(['cors'])->group(function () {
         Route::post('/account/delete/{id}', 'destroy');
     });
     
+    //anime
     Route::get('/', [MediaController::class, 'popularAnime']);
     Route::get('/anime', [MediaController::class, 'popularAnime']);
+    Route::get('/anime/popular', [MediaController::class, 'popularAnime']);
     Route::get('/anime/top', [MediaController::class, 'topAnime']);
-    Route::get('/manga', [MediaController::class, 'popularManga']);
-    Route::get('/trending/anime', [MediaController::class, 'trendingAnime']);
-    Route::get('/trending/manga', [MediaController::class, 'trendingManga']);
-    Route::get('/upcoming/anime', [MediaController::class, 'upcomingAnime']);
-    Route::get('/upcoming/manga', [MediaController::class, 'upcomingManga']);
+    Route::get('/anime/trending', [MediaController::class, 'trendingAnime']);
+    Route::get('/anime/upcoming', [MediaController::class, 'upcomingAnime']);
+    Route::get('/anime/movie', [MediaController::class, 'topMovieAnime']);
     Route::get('/anime/{id}', [MediaController::class, 'show']);
     Route::post('/search/anime', [MediaController::class, 'filteredMediaAnime']);
+
+    //manga
+    Route::get('/manga', [MediaController::class, 'popularManga']);
+    Route::get('/manga/top', [MediaController::class, 'topManga']);
+    Route::get('/manga/trending', [MediaController::class, 'trendingManga']);
+    Route::get('/manga/manhwa', [MediaController::class, 'manhwaManga']);
+    Route::get('/manga/popular', [MediaController::class, 'popularManga']);
     Route::post('/search/manga', [MediaController::class, 'filteredMediaManga']);
     
     
