@@ -54,13 +54,25 @@ class MediaController extends Controller
    //anime
   public function popularAnime()
   {
-    $popular_animes = Media::where('season', 'SPRING')->where('type', 'ANIME')->paginate(6);
+    $popular_animes = Media::where('season', 'SPRING')->where('type', 'ANIME')->paginate(100);
 
     return response()->json([
       'status' => 'success',
       'media_length' => count($popular_animes),
       'message' => 'Media successfully fetched',
       'data' => $popular_animes,
+    ],200);
+  }
+
+  public function thisSeasonAnime()
+  {
+    $this_season_animes = Media::where('season', 'SPRING')->where('type', 'ANIME')->paginate(100);
+
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($this_season_animes),
+      'message' => 'Media successfully fetched',
+      'data' => $this_season_animes,
     ],200);
   }
 
@@ -80,7 +92,7 @@ class MediaController extends Controller
 
   public function upcomingAnime()
   {
-    $upcoming_animes=Media::where('season_year', 2024)->where('type', 'ANIME')->paginate(6);
+    $upcoming_animes=Media::where('season_year', 2023)->where('season', 'SUMMER')->where('type', 'ANIME')->paginate(100);
 
     return response()->json([
       'status' => 'success',
@@ -119,7 +131,7 @@ class MediaController extends Controller
 
   public function popularManga()
   {
-    $popular_mangas=Media::where('season', 'SPRING')->where('type', 'MANGA')->paginate(6);
+    $popular_mangas=Media::where('airing_status', 'FINISHED')->where('type', 'MANGA')->paginate(100);
 
     return response()->json([
       'status' => 'success',
@@ -142,16 +154,42 @@ class MediaController extends Controller
     ],200);
   }
 
+
+  public function manhwaManga()
+  {
+    $trending_mangas = Media::where('type', 'MANGA')->paginate(100);
+
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($trending_mangas),
+      'message' => 'Media successfully fetched',
+      'data' => $trending_mangas,
+    ],200);
+  }
+
   
   public function upcomingManga()
   {
-    $upcoming_mangas=Media::where('season_year', 2024)->where('type', 'MANGA')->paginate(6);
+    $upcoming_mangas=Media::where('season_year', 2024)->where('type', 'MANGA')->paginate(100);
 
     return response()->json([
       'status' => 'success',
       'media_length' => count($upcoming_mangas),
       'message' => 'Media successfully fetched',
       'data' => $upcoming_mangas,
+    ],200);
+  }
+
+
+  public function topManga() 
+  {
+    $top = Media::where('type', 'MANGA')->paginate(100);
+
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($top),
+      'message' => 'Media successfully fetched',
+      'data' => $top,
     ],200);
   }
 
@@ -215,20 +253,16 @@ class MediaController extends Controller
 
     $media = $media->select('*');
 
+    if(isset($request->type)){
+      $media = $media->where('type', $request->type );
+    }
+
     if(isset($request->search)){
       $media = $media->where('title','LIKE','%'. $request->search . '%');
     }
 
     if(isset($request->genres)){
       $media = $media->where('genres', 'LIKE','%'. $request->genres . '%' );
-    }
-
-    if(isset($request->season_year)){
-      $media = $media->where('season_year', $request->season_year );
-    }
-
-    if(isset($request->format)){
-      $media = $media->where('format', $request->format );
     }
 
     if(isset($request->airing_status)){

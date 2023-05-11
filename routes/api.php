@@ -45,6 +45,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/anime/top', [MediaController::class, 'topAnime']);
     Route::get('/anime/trending', [MediaController::class, 'trendingAnime']);
     Route::get('/anime/upcoming', [MediaController::class, 'upcomingAnime']);
+    Route::get('/anime/this-season', [MediaController::class, 'thisSeasonAnime']);
     Route::get('/anime/movie', [MediaController::class, 'topMovieAnime']);
     Route::get('/anime/{id}', [MediaController::class, 'show']);
     Route::get('/media/{id}', [MediaController::class, 'show']);
