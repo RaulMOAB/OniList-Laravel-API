@@ -30,4 +30,9 @@ class People extends Model
     {
         return $this->belongsToMany(Character::class, 'person_dubs_character', 'person_id', 'character_id');
     }
+
+    public function medias(): BelongsToMany
+    {
+        return $this->belongsToMany(Media::class, 'works_in', 'person_id', 'media_id');
+    }
 }
