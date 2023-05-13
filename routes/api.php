@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MediaController;
@@ -22,9 +23,34 @@ use App\Http\Controllers\PeopleController;
 |
 */
 
+
+Route::get('/storage/profile/{filename}', function ($filename) {
+
+    $path = storage_path('app/public/profile/' . $filename);
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    $file = File::get($path);
+    $type = File::mimeType($path);
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    return $response;
+});
+
+Route::get('/storage/banner/{filename}', function ($filename) {
+
+    $path = storage_path('app/public/banner/' . $filename);
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    $file = File::get($path);
+    $type = File::mimeType($path);
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    return $response;
+});
+
 Route::middleware(['cors'])->group(function () {
-    
-    Route::get('/user/{id}', [AccountController::class, 'show']);
     
     Route::controller(AuthController::class)->group(function () {
         Route::post('login', 'login');
@@ -34,6 +60,12 @@ Route::middleware(['cors'])->group(function () {
     });
     
     Route::controller(AccountController::class)->group(function () {
+        Route::get('/user/{id}', 'show');
+        Route::post('/update/image', 'updateProfileImage');    
+        Route::post('/update/description','updateDescription');
+        Route::post('/update/username', 'updateUsername');
+        Route::post('/update/email', 'updateEmail');
+        Route::post('/update/password', 'updatePassword');
         Route::post('/account/delete/{id}', 'destroy');
     });
     
@@ -51,6 +83,7 @@ Route::middleware(['cors'])->group(function () {
     
     
     Route::get('/send/{email}', [MailController::class, 'index']);
+    Route::post('/send/registered-user-code', [MailController::class, 'send']);
     // Route::post('/verifyMail',[MailController::class, 'verifyMail']);
     Route::get('/account/{id}', [AccountController::class, 'show']);
     

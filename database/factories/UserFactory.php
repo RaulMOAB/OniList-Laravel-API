@@ -22,10 +22,10 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'role' => 'user',
+            'role' => 'none',
             'description' => fake()->paragraph(3),
-            'profile_image' => fake()->imageUrl(),
-            'banner_image' => fake()->imageUrl(),
+            'profile_image' => "default-profile.png",
+            'banner_image' => "default-banner.jpg",
             'remember_token' => Str::random(10),
         ];
     }
