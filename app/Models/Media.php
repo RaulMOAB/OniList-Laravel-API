@@ -46,11 +46,16 @@ class Media extends Model
 
     public function related()
     {
-        return $this->belongsToMany(Media::class,'related_to','media_id', 'related_media_id');
+        return $this->belongsToMany(Media::class, 'related_to', 'media_id', 'related_media_id');
     }
 
     public function characters(): BelongsToMany
     {
         return $this->belongsToMany(Character::class, 'characters_appears_in', 'media_id', 'character_id');
+    }
+
+    public function people(): BelongsToMany
+    {
+        return $this->belongsToMany(People::class, 'works_in', 'person_id', 'media_id');
     }
 }

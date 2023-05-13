@@ -11,6 +11,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\RelationsController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\WorksInController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +59,7 @@ Route::middleware(['cors'])->group(function () {
         Route::post('logout', 'logout');
         Route::post('refresh', 'refresh');
     });
-    
+
     Route::controller(AccountController::class)->group(function () {
         Route::get('/user/{id}', 'show');
         Route::post('/update/image', 'updateProfileImage');    
@@ -69,25 +70,34 @@ Route::middleware(['cors'])->group(function () {
         Route::post('/account/delete/{id}', 'destroy');
     });
     
+    //anime
     Route::get('/', [MediaController::class, 'popularAnime']);
     Route::get('/anime', [MediaController::class, 'popularAnime']);
+    Route::get('/anime/popular', [MediaController::class, 'popularAnime']);
     Route::get('/anime/top', [MediaController::class, 'topAnime']);
-    Route::get('/manga', [MediaController::class, 'popularManga']);
-    Route::get('/trending/anime', [MediaController::class, 'trendingAnime']);
-    Route::get('/trending/manga', [MediaController::class, 'trendingManga']);
-    Route::get('/upcoming/anime', [MediaController::class, 'upcomingAnime']);
-    Route::get('/upcoming/manga', [MediaController::class, 'upcomingManga']);
+    Route::get('/anime/trending', [MediaController::class, 'trendingAnime']);
+    Route::get('/anime/upcoming', [MediaController::class, 'upcomingAnime']);
+    Route::get('/anime/this-season', [MediaController::class, 'thisSeasonAnime']);
+    Route::get('/anime/movie', [MediaController::class, 'topMovieAnime']);
     Route::get('/anime/{id}', [MediaController::class, 'show']);
+    Route::get('/media/{id}', [MediaController::class, 'show']);
     Route::post('/search/anime', [MediaController::class, 'filteredMediaAnime']);
+
+    //manga
+    Route::get('/manga', [MediaController::class, 'popularManga']);
+    Route::get('/manga/top', [MediaController::class, 'topManga']);
+    Route::get('/manga/trending', [MediaController::class, 'trendingManga']);
+    Route::get('/manga/manhwa', [MediaController::class, 'manhwaManga']);
+    Route::get('/manga/popular', [MediaController::class, 'popularManga']);
     Route::post('/search/manga', [MediaController::class, 'filteredMediaManga']);
-    
-    
+
+
     Route::get('/send/{email}', [MailController::class, 'index']);
     Route::post('/send/registered-user-code', [MailController::class, 'send']);
     // Route::post('/verifyMail',[MailController::class, 'verifyMail']);
     Route::get('/account/{id}', [AccountController::class, 'show']);
-    
-    
+
+
     Route::get('/library/{username}', [LibraryController::class, 'libraryInfo']);
     Route::get('/library/{username}/animelist', [LibraryController::class, 'animeList']);
     Route::get('/library/{username}/mangalist', [LibraryController::class, 'mangaList']);
@@ -95,20 +105,19 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/library/{username}/stats', [LibraryController::class, 'overviewStats']);
     Route::get('/library/{username}/stats/animelist', [LibraryController::class, 'animelistStats']);
     Route::get('/library/{username}/stats/mangalist', [LibraryController::class, 'mangalistStats']);
-    
+
     Route::get('/status/{user_id}/{media_id}', [LibraryController::class, 'getMediaStatus']);
     Route::post('/status', [LibraryController::class, 'setMediaStatus']);
     Route::post('/media/data', [LibraryController::class, 'insertOrUpdateMediaData']);
     Route::post('/media/favorite', [LibraryController::class, 'insertFavorite']);
     Route::delete('/media/delete/{media_id}', [LibraryController::class, 'deleteMedia']);
-    
+
     //Media related to media
     Route::get('/{media_id}/relations', [RelationsController::class, 'getMediasRelatedTo']);
     //Character
     Route::get('/characters/{character_id}', [CharacterController::class, 'getCharacters']);
     Route::get('/media/characters/{media_id}', [CharacterController::class, 'getCharacterAppearsMedia']);
 
-//Dubbers
-// Route::get('/staff/{character_id}', [PeopleController::class, 'peopleDubCharacter']);
-// Route::get('/media/staff/{staff_id}', [PeopleController::class, 'peopleDubCharacter']);
+    //Staff
+    Route::get('/{media_id}/staff', [WorksInController::class, 'getStaff']);
 });
