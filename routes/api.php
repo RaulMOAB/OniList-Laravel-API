@@ -116,8 +116,10 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/{media_id}/relations', [RelationsController::class, 'getMediasRelatedTo']);
     //Character
     Route::get('/characters/{character_id}', [CharacterController::class, 'getCharacters']);
+    Route::get('/characters/appears/{character_id}', [CharacterController::class, 'getCharacterAppearsIn']);
     Route::get('/media/characters/{media_id}', [CharacterController::class, 'getCharacterAppearsMedia']);
 
     //Staff
+    Route::get('/staff/{id}', [PeopleController::class, 'getStaffPerson']);
     Route::get('/{media_id}/staff', [WorksInController::class, 'getStaff']);
 });

@@ -4,14 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Dubbers;
 use App\Models\People;
+use App\Models\Staff;
 
 use Illuminate\Http\Request;
 
 class PeopleController extends Controller
 {
 
-    public function getStaff(string $person_id)
+    public function getStaffPerson(string $person_id)
     {
+        $person = People::where('id', $person_id)->first();
+
+        $job = Staff::where('id', $person_id)->first();
+
+        return response()->json([
+            'person' => $person,
+            'job'    => $job,
+        ]);
     }
     public function peopleDubCharacter(string $character_id)
     {

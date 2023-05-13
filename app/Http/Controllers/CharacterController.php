@@ -36,4 +36,12 @@ class CharacterController extends Controller
         return response()->json($final_data);
 
     }
+
+    public function getCharacterAppearsIn($id)
+    {
+        $character_appears_in = CharactersAppearsIn::where('character_id', $id)->get();
+
+        return response()->json($character_appears_in);
+
+    }
 }
