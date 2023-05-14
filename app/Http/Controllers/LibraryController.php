@@ -247,7 +247,7 @@ class LibraryController extends Controller
         $anime_list_with_status = [];
 
         foreach ($subscribed_media as $media) {
-            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->get();
+            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->first();
             $subscribed_media_status = ['media' => $media, 'status' => $status];
             array_push($anime_list_with_status, $subscribed_media_status);
         }

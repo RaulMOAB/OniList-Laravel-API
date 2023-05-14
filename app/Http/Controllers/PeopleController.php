@@ -13,9 +13,9 @@ class PeopleController extends Controller
 
     public function getStaffPerson(string $person_id)
     {
-        $person = People::where('id', $person_id)->first();
+        $person = People::find($person_id);
 
-        $job = Staff::where('id', $person_id)->first();
+        $job = Staff::where('person_id', $person_id)->first();
 
         return response()->json([
             'person' => $person,
