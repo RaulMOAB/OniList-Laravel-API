@@ -51,6 +51,10 @@ Route::get('/storage/banner/{filename}', function ($filename) {
     return $response;
 });
 
+Route::get('/verify-token', function () {
+    return response()->json(['message' => 'Token is valid.']);
+})->middleware('auth:api');
+
 Route::middleware(['cors'])->group(function () {
     
     Route::controller(AuthController::class)->group(function () {
