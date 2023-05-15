@@ -284,9 +284,6 @@ class LibraryController extends Controller
             'large_cover_image',
             'medium_cover_image',
             'banner_image',
-            'episodes',
-            'format',
-            'airing_status',
             'genres',
             'type',
         ]);
@@ -294,7 +291,7 @@ class LibraryController extends Controller
         $final_data = [];
 
         foreach ($subscribed_media as $media) {
-            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->get();
+            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->first();
             $subscribed_media_status = ['media' => $media, 'status' => $status];
             array_push($final_data, $subscribed_media_status);
         }

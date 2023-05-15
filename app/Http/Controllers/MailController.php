@@ -11,6 +11,10 @@ use App\Models\User;
 
 class MailController extends Controller
 {
+    public function forgotPassword(Request $request){
+        $email = $request->email;
+        //TODO Email verification
+    }
     public function index($email) 
     {
         // check if the user exists in users table
