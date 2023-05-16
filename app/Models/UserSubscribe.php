@@ -25,16 +25,7 @@ class UserSubscribe extends Model
         'favorite',
         'private'
     ];
-    public $timestamps = false;
 
-    protected function performUpdate(Builder $query)
-    {
-        if ($this->isDirty('status')) {
-            $this->setUpdatedAt($this->freshTimestamp());
-        }
-
-        return parent::performUpdate($query);
-    }
 
     // protected $casts = [
     //     'start_date' => 'string'

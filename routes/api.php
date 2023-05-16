@@ -97,6 +97,8 @@ Route::middleware(['cors'])->group(function () {
 
 
     Route::get('/send/{email}', [MailController::class, 'index']);
+    Route::post('/forgot-password', [MailController::class, 'forgotPassword']);
+    Route::post('/renew-password', [MailController::class, 'renewPassword']);
     Route::post('/send/registered-user-code', [MailController::class, 'send']);
     // Route::post('/verifyMail',[MailController::class, 'verifyMail']);
     Route::get('/account/{id}', [AccountController::class, 'show']);

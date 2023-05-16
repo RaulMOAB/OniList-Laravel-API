@@ -14,13 +14,15 @@ class MailNotify extends Mailable
     use Queueable, SerializesModels;
 
     private $data = [];
+    private $template = 'emails.index';
 
     /**
      * Create a new message instance.
      */
-    public function __construct($data)
+    public function __construct($data, $template= 'emails.index')
     {
         $this->data = $data;
+        $this->template = $template;
     }
 
     /**
@@ -39,7 +41,7 @@ class MailNotify extends Mailable
     public function build()
     {
         return $this->from('onilist.sl@gmail.com', 'Onilist')
-        ->subject($this->data['subject'])->view('emails.index')->with('data', $this->data);
+        ->subject($this->data['subject'])->view($this->template)->with('data', $this->data);
     }
 
     /**
