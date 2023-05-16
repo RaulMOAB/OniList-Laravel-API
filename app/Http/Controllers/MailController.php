@@ -66,7 +66,7 @@ class MailController extends Controller
         $count = User::where('email', $email)->count();
         if ($count === 0) {
             return response()->json([
-                'error' => 'This email is not registered in onilist.'
+                'error' => 'This email is not registered.'
             ]);
         }
         $code = rand(100000, 999999);
@@ -119,8 +119,7 @@ class MailController extends Controller
 
         if ($count > 0) {
             return response()->json([
-                'message' => 'This account has been created',
-                'status' => 'failed',
+                'error' => 'This email is already registered.'
             ]);
         }
 
@@ -152,14 +151,12 @@ class MailController extends Controller
         try {
             Mail::to($email)->send(new MailNotify($data));
             return response()->json([
-                'message' => 'Check verification code in your mail box',
-                'status' => 'success',
+                'success' => 'Check verification code in your mail box'
             ]);
 
         } catch (Exception $th) {
             return response()->json([
-                'message' => 'Sorry something went wrong!',
-                'status' => 'failed',
+                'status' => 'Sorry something went wrong!'
             ]);
         }
     }
@@ -183,7 +180,7 @@ class MailController extends Controller
 
             if ($count > 0) {
                 return response()->json([
-                    'error' => 'This email is already registered in Onilist.',
+                    'error' => 'This email is already registered.',
                 ]);
             }
 

@@ -80,10 +80,10 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => "registered_user",
-                'profile_image'=>'default_profile.png',
-                'banner_image'=>'default_banner.jpg'
+                'profile_image'=>'default-profile.png',
+                'banner_image'=>'default-banner.jpg'
             ]);
-
+            //TODO Devolver el usuario entero
             $delete_verified_mail = Verify::where('email', $request->email)->delete();
     
             $credentials = $request->only('email', 'password');
@@ -104,7 +104,7 @@ class AuthController extends Controller
         }
         else{
             return response()->json([
-                'status' => 'failed',
+                'error' => 'Invalid code',
                 'message' => 'Invalid code',
                 'registered' => false,
                 'code' => $request->code,
