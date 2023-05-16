@@ -80,6 +80,8 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => "registered_user",
+                'profile_image'=>'default_profile.png',
+                'banner_image'=>'default_banner.jpg'
             ]);
 
             $delete_verified_mail = Verify::where('email', $request->email)->delete();
