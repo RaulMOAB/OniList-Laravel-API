@@ -44,14 +44,14 @@ class MediaController extends Controller
 
     return $popular_medias;
   }
-  
+
 
 
   /**
    * Display a listing of the resource.
    */
 
-   //anime
+  //anime
   public function popularAnime()
   {
     $popular_animes = Media::where('season', 'SPRING')->where('type', 'ANIME')->paginate(100);
@@ -61,7 +61,7 @@ class MediaController extends Controller
       'media_length' => count($popular_animes),
       'message' => 'Media successfully fetched',
       'data' => $popular_animes,
-    ],200);
+    ], 200);
   }
 
   public function thisSeasonAnime()
@@ -73,7 +73,7 @@ class MediaController extends Controller
       'media_length' => count($this_season_animes),
       'message' => 'Media successfully fetched',
       'data' => $this_season_animes,
-    ],200);
+    ], 200);
   }
 
 
@@ -86,24 +86,24 @@ class MediaController extends Controller
       'media_length' => count($trending_animes),
       'message' => 'Media successfully fetched',
       'data' => $trending_animes,
-    ],200);
+    ], 200);
   }
 
 
   public function upcomingAnime()
   {
-    $upcoming_animes=Media::where('season_year', 2023)->where('season', 'SUMMER')->where('type', 'ANIME')->paginate(100);
+    $upcoming_animes = Media::where('season_year', 2023)->where('season', 'SUMMER')->where('type', 'ANIME')->paginate(100);
 
     return response()->json([
       'status' => 'success',
       'media_length' => count($upcoming_animes),
       'message' => 'Media successfully fetched',
       'data' => $upcoming_animes,
-    ],200);
+    ], 200);
   }
 
 
-  public function topAnime() 
+  public function topAnime()
   {
     $top = Media::where('type', 'ANIME')->paginate(100);
 
@@ -112,11 +112,12 @@ class MediaController extends Controller
       'media_length' => count($top),
       'message' => 'Media successfully fetched',
       'data' => $top,
-    ],200);
+    ], 200);
   }
 
 
-  public function topMovieAnime() {
+  public function topMovieAnime()
+  {
     $movies = Media::where('type', 'ANIME')->where('format', 'MOVIE')->paginate(100);
 
     return response()->json([
@@ -124,24 +125,24 @@ class MediaController extends Controller
       'media_length' => count($movies),
       'message' => 'Media successfully fetched',
       'data' => $movies,
-    ],200);
+    ], 200);
   }
 
   //manga
 
   public function popularManga()
   {
-    $popular_mangas=Media::where('airing_status', 'FINISHED')->where('type', 'MANGA')->paginate(100);
+    $popular_mangas = Media::where('airing_status', 'FINISHED')->where('type', 'MANGA')->paginate(100);
 
     return response()->json([
       'status' => 'success',
       'media_length' => count($popular_mangas),
       'message' => 'Media successfully fetched',
       'data' => $popular_mangas,
-    ],200);
+    ], 200);
   }
 
-  
+
   public function trendingManga()
   {
     $trending_mangas = Media::where('type', 'MANGA')->paginate(100);
@@ -151,7 +152,7 @@ class MediaController extends Controller
       'media_length' => count($trending_mangas),
       'message' => 'Media successfully fetched',
       'data' => $trending_mangas,
-    ],200);
+    ], 200);
   }
 
 
@@ -164,24 +165,24 @@ class MediaController extends Controller
       'media_length' => count($trending_mangas),
       'message' => 'Media successfully fetched',
       'data' => $trending_mangas,
-    ],200);
+    ], 200);
   }
 
-  
+
   public function upcomingManga()
   {
-    $upcoming_mangas=Media::where('season_year', 2024)->where('type', 'MANGA')->paginate(100);
+    $upcoming_mangas = Media::where('season_year', 2024)->where('type', 'MANGA')->paginate(100);
 
     return response()->json([
       'status' => 'success',
       'media_length' => count($upcoming_mangas),
       'message' => 'Media successfully fetched',
       'data' => $upcoming_mangas,
-    ],200);
+    ], 200);
   }
 
 
-  public function topManga() 
+  public function topManga()
   {
     $top = Media::where('type', 'MANGA')->paginate(100);
 
@@ -190,7 +191,7 @@ class MediaController extends Controller
       'media_length' => count($top),
       'message' => 'Media successfully fetched',
       'data' => $top,
-    ],200);
+    ], 200);
   }
 
 
@@ -205,34 +206,35 @@ class MediaController extends Controller
   }
 
   //filters
-  public function filteredMediaAnime(Request $request){
+  public function filteredMediaAnime(Request $request)
+  {
 
     $media = new Media();
 
     $media = $media->select('*');
 
-    if(isset($request->search)){
-      $media = $media->where('title','LIKE','%'. $request->search . '%');
+    if (isset($request->search)) {
+      $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
     }
 
-    if(isset($request->genres)){
-      $media = $media->where('genres', 'LIKE','%'. $request->genres . '%' );
+    if (isset($request->genres)) {
+      $media = $media->where('genres', 'LIKE', '%' . $request->genres . '%');
     }
 
-    if(isset($request->season_year)){
-      $media = $media->where('season_year', $request->season_year );
+    if (isset($request->season_year)) {
+      $media = $media->where('season_year', $request->season_year);
     }
 
-    if(isset($request->season)){
-      $media = $media->where('season', $request->season );
+    if (isset($request->season)) {
+      $media = $media->where('season', $request->season);
     }
 
-    if(isset($request->format)){
-      $media = $media->where('format', $request->format );
+    if (isset($request->format)) {
+      $media = $media->where('format', $request->format);
     }
 
-    if(isset($request->airing_status)){
-      $media = $media->where('airing_status', $request->airing_status );
+    if (isset($request->airing_status)) {
+      $media = $media->where('airing_status', $request->airing_status);
     }
 
     $media = $media->paginate(18);
@@ -242,31 +244,31 @@ class MediaController extends Controller
       'media_length' => count($media),
       'message' => 'Media successfully fetched',
       'data' => $media,
-    ],200);
-
+    ], 200);
   }
 
 
-  public function filteredMediaManga(Request $request){
+  public function filteredMediaManga(Request $request)
+  {
 
     $media = new Media();
 
     $media = $media->select('*');
 
-    if(isset($request->type)){
-      $media = $media->where('type', $request->type );
+    if (isset($request->type)) {
+      $media = $media->where('type', $request->type);
     }
 
-    if(isset($request->search)){
-      $media = $media->where('title','LIKE','%'. $request->search . '%');
+    if (isset($request->search)) {
+      $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
     }
 
-    if(isset($request->genres)){
-      $media = $media->where('genres', 'LIKE','%'. $request->genres . '%' );
+    if (isset($request->genres)) {
+      $media = $media->where('genres', 'LIKE', '%' . $request->genres . '%');
     }
 
-    if(isset($request->airing_status)){
-      $media = $media->where('airing_status', $request->airing_status );
+    if (isset($request->airing_status)) {
+      $media = $media->where('airing_status', $request->airing_status);
     }
 
     $media = $media->paginate(18);
@@ -276,8 +278,6 @@ class MediaController extends Controller
       'media_length' => count($media),
       'message' => 'Media successfully fetched',
       'data' => $media,
-    ],200);
-
+    ], 200);
   }
-
 }
