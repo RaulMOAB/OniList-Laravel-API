@@ -22,7 +22,7 @@ class UserSubscribe extends Model
         'end_date',
         'rewatches',
         'notes',
-        'favourite',
+        'favorite',
         'private'
     ];
     public $timestamps = false;

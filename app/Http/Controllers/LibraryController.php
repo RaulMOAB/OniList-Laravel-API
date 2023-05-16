@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class LibraryController extends Controller
 {
-    const MEDIA_STATUS = ['WATCHING', 'PLAN TO WATCH', 'COMPLETED', 'REWATCHING', 'PAUSED', 'DROPPED'];
+    const MEDIA_STATUS = ['WATCHING', 'READING', 'PLAN TO WATCH', 'PLAN TO READ', 'COMPLETED', 'REWATCHING', 'REREADING', 'PAUSED', 'DROPPED'];
 
     public function __construct()
     {
@@ -33,11 +33,11 @@ class LibraryController extends Controller
                 $year = $start_date_splitted[0];
                 array_push($years, $year);
             }
-            array_push($years,$anime->season_year);
+            array_push($years, $anime->season_year);
             array_push($formats, $anime->format);
             $anime_genres = json_decode($anime->genres);
-            foreach ( $anime_genres as $genre) {
-                if($genre){
+            foreach ($anime_genres as $genre) {
+                if ($genre) {
                     array_push($genres, $genre);
                 }
             }
@@ -66,15 +66,14 @@ class LibraryController extends Controller
         $animelist_data = [
             'labels_years' => $years_labels,
             'data_years' => $years_data,
-            'labels_formats'=> $format_labels,
-            'data_formats'=> $format_data,
+            'labels_formats' => $format_labels,
+            'data_formats' => $format_data,
             'labels_genres' => $genres_labels,
             'data_genres' => $genre_data,
             'labels_status' => $status_labels,
             'data_status' => count($status_data) > 3 ? $status_data : null
         ];
         return response()->json($animelist_data);
-
     }
 
     public function mangalistStats(string $username)
@@ -89,8 +88,8 @@ class LibraryController extends Controller
 
         foreach ($subscribed_anime as $manga) {
 
-            $start_date_splitted = explode("-",$manga->start_date) ?? null;
-            if($start_date_splitted){
+            $start_date_splitted = explode("-", $manga->start_date) ?? null;
+            if ($start_date_splitted) {
                 $year = $start_date_splitted[0];
                 array_push($years, $year);
             }
@@ -134,11 +133,11 @@ class LibraryController extends Controller
             'data_status' => count($status_data) > 3 ? $status_data : null
         ];
         return response()->json($mangalist_data);
-
     }
 
 
-    public function overviewStats(string $username){
+    public function overviewStats(string $username)
+    {
         $user = User::where('username', $username)->first();
         $subscribed_anime = $user->medias()->where('type', 'ANIME')->get([
             'media_id',
@@ -168,35 +167,34 @@ class LibraryController extends Controller
             $total_chapters_readed = $total_chapters_readed + $status->progress;
             $manga_status = "";
 
-            if($status->status === "WATCHING"){
+            if ($status->status === "WATCHING") {
                 $manga_status = "READING";
-            }elseif($status->status === "REWATCHING"){
+            } elseif ($status->status === "REWATCHING") {
                 $manga_status = "REREADING";
-            }elseif($status->status === "PLAN TO WATCH"){
+            } elseif ($status->status === "PLAN TO WATCH") {
                 $manga_status = "PLAN TO READ";
-            }else{
+            } else {
                 $manga_status = $status->status;
             }
             array_push($status_distribution, $manga_status);
         }
 
         // Obtener números de repeticiones
-        $status_results = array_count_values($status_distribution);//return counted values and each keys
+        $status_results = array_count_values($status_distribution); //return counted values and each keys
 
         $status_data = array_values($status_results); //return array only eith the values
-        $current_status = array_keys($status_results);//return array with the keys
+        $current_status = array_keys($status_results); //return array with the keys
 
         $overview_data = [
-            'total_animes'=> $total_animes,
+            'total_animes' => $total_animes,
             'total_episodes_watched' => $total_episodes_watched,
-            'time_watched' => ($total_episodes_watched*24)/60, //in hours
-            'total_mangas'=> $total_mangas,
+            'time_watched' => ($total_episodes_watched * 24) / 60, //in hours
+            'total_mangas' => $total_mangas,
             'total_chapters_readed' => $total_chapters_readed,
-            'labels'=> $current_status,
-            'data'=> count($status_data) > 3 ? $status_data : null
+            'labels' => $current_status,
+            'data' => count($status_data) > 3 ? $status_data : null
         ];
         return response()->json($overview_data);
-
     }
     public function animeList(string $username)
     {
@@ -254,7 +252,8 @@ class LibraryController extends Controller
 
         return response()->json($anime_list_with_status);
     }
-    public function favoritesMedias(string $username){
+    public function favoritesMedias(string $username)
+    {
         $user = User::where('username', $username)->first();
         $subscribed_media = $user->medias()->get([
             'media_id',
@@ -267,7 +266,7 @@ class LibraryController extends Controller
         $favorite_media_list_with_status = [];
 
         foreach ($subscribed_media as $media) {
-            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->where('favorite',1)->get();
+            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->where('favorite', 1)->get();
             $subscribed_media_status = ['media' => $media, 'status' => $status];
             array_push($favorite_media_list_with_status, $subscribed_media_status);
         }
@@ -337,7 +336,10 @@ class LibraryController extends Controller
     public function insertFavorite(Request $request)
     {
 
-        $favorite = UserSubscribe::where('user_id', $request->user_id)->where('media_id', $request->media_id)->update(['favorite' => $request->favorite]);
+        $favorite = UserSubscribe::updateOrCreate(
+            ['user_id' => $request->user_id, 'media_id' => $request->media_id],
+            ['status' => $request->status, 'favorite' => $request->favorite]
+        );
 
         return response()->json($favorite);
     }
