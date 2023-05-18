@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 
 class MediaController extends Controller
 {
+
+
   private function getPopularMedias(string $query, string $type): array
   {
     //Call to get most popular media
@@ -279,5 +281,18 @@ class MediaController extends Controller
       'message' => 'Media successfully fetched',
       'data' => $media,
     ], 200);
+  }
+
+  public function countUsersHasMedia(string $media_id)
+  {
+    $media_status = ['WATCHING', 'READING', 'PLAN TO WATCH', 'PLAN TO READ', 'COMPLETED', 'REWATCHING', 'REREADING', 'PAUSED', 'DROPPED'];
+
+
+    $count = Media::whereHas('users', function ($query) use ($media_id, $media_status) {
+      $query->where('id', $media_id)
+            ->whereIn('status', $media_status);
+  })->count();
+
+  return response()->json(['count' => $count]);
   }
 }

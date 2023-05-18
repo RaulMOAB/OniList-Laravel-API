@@ -94,7 +94,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/manga/manhwa', [MediaController::class, 'manhwaManga']);
     Route::get('/manga/popular', [MediaController::class, 'popularManga']);
     Route::post('/search/manga', [MediaController::class, 'filteredMediaManga']);
-
+   
 
     Route::get('/send/{email}', [MailController::class, 'index']);
     Route::post('/forgot-password', [MailController::class, 'forgotPassword']);
@@ -129,3 +129,6 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/staff/{id}', [PeopleController::class, 'getStaffPerson']);
     Route::get('/{media_id}/staff', [WorksInController::class, 'getStaff']);
 });
+
+Route::get('/media/{id}/users', [MediaController::class, 'countUsersHasMedia']);
+
