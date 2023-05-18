@@ -343,9 +343,11 @@ class LibraryController extends Controller
 
     public function insertOrUpdateMediaData(Request $request)
     {
+        $favorite = $request->favorite ? "1" : "0" ?? "0";
+
         $entry = UserSubscribe::updateOrCreate(
             ['user_id' => $request->user, 'media_id' => $request->media_id],
-            ['status' => $request->status, 'rate' => $request->rate, 'progress' => $request->progress, 'start_date' => $request->start_date, 'end_date' => $request->endDate, 'rewatches' => $request->rewatches, 'notes' => $request->notes, 'favorite' => $request->favorite, 'private' => $request->private],
+            ['status' => $request->status, 'rate' => $request->rate, 'progress' => $request->progress, 'start_date' => $request->start_date, 'end_date' => $request->endDate, 'rewatches' => $request->rewatches, 'notes' => $request->notes, 'favorite' => $favorite, 'private' => $request->private],
         );
 
         return response()->json($entry);
