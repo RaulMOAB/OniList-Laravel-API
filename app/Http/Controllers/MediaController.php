@@ -307,21 +307,32 @@ class MediaController extends Controller
   public function filteredMedia(Request $request)
   {
 
-    $media = new Media();
+    $manga = new Media();
+    $anime = new Media();
 
-    $media = $media->select('*');
+    $manga = $manga->select('*');
+    $anime = $anime->select('*');
 
-    if (isset($request->search)) {
-      $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
+    if (isset($request->search) && strlen($request->search) >= 2) {
+      $anime = $anime->where('title', 'LIKE', '%' . $request->search . '%');
     }
 
-    $media = $media->paginate(100);
+    if (isset($request->search) && strlen($request->search) >= 2) {
+      $manga = $manga->where('title', 'LIKE', '%' . $request->search . '%');
+    }
+
+    $manga = $manga->where('type', 'MANGA');
+    $anime = $anime->where('type', 'LIKE', 'ANIME');
+
+    $manga = $manga->paginate(6);
+    $anime = $anime->paginate(6);
 
     return response()->json([
       'status' => 'success',
-      'media_length' => count($media),
+      'media_length' => (count($manga) + count($manga)),
       'message' => 'Media successfully fetched',
-      'data' => $media,
+      'manga' => $manga,
+      'anime' => $anime,
     ], 200);
   }
 }
