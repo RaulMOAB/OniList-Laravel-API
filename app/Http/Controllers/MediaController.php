@@ -239,7 +239,7 @@ class MediaController extends Controller
       $media = $media->where('airing_status', $request->airing_status);
     }
 
-    $media = $media->paginate(18);
+    $media = $media->paginate(100);
 
     return response()->json([
       'status' => 'success',
@@ -265,6 +265,14 @@ class MediaController extends Controller
       $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
     }
 
+    if (isset($request->tags)) {
+      $media = $media->where('tags', 'LIKE', '%' . $request->tags . '%');
+    }
+
+    if (isset($request->format)) {
+      $media = $media->where('format', $request->format);
+    }
+
     if (isset($request->genres)) {
       $media = $media->where('genres', 'LIKE', '%' . $request->genres . '%');
     }
@@ -273,7 +281,7 @@ class MediaController extends Controller
       $media = $media->where('airing_status', $request->airing_status);
     }
 
-    $media = $media->paginate(18);
+    $media = $media->paginate(100);
 
     return response()->json([
       'status' => 'success',

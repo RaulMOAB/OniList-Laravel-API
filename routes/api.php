@@ -11,6 +11,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\RelationsController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\PeopleDubController;
 use App\Http\Controllers\WorksInController;
 
 /*
