@@ -22,4 +22,11 @@ class WorksInController extends Controller
 
         return response()->json($ppl_works_in);
     }
+
+    public function personWorksIn($id)
+    {
+        $medias = Staff::where('person_id', $id)->paginate(100);
+
+        return response()->json($medias);
+    }
 }

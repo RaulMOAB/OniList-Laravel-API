@@ -128,6 +128,8 @@ Route::middleware(['cors'])->group(function () {
     //Staff
     Route::get('/staff/{id}', [PeopleController::class, 'getStaffPerson']);
     Route::get('/{media_id}/staff', [WorksInController::class, 'getStaff']);
+    Route::get('/staff/dub/{id}', [PeopleDubController::class, 'personDubCharacter']);
+    Route::get('/staff/worksin/{id}', [WorksInController::class, 'personWorksIn']);
 });
 
 Route::get('/media/{id}/users', [MediaController::class, 'countUsersHasMedia']);
