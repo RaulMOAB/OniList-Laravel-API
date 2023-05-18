@@ -95,6 +95,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/manga/manhwa', [MediaController::class, 'manhwaManga']);
     Route::get('/manga/popular', [MediaController::class, 'popularManga']);
     Route::post('/search/manga', [MediaController::class, 'filteredMediaManga']);
+    Route::post('/search/media', [MediaController::class, 'filteredMedia']);
    
 
     Route::get('/send/{email}', [MailController::class, 'index']);

@@ -303,4 +303,25 @@ class MediaController extends Controller
 
   return response()->json(['count' => $count]);
   }
+
+  public function filteredMedia(Request $request)
+  {
+
+    $media = new Media();
+
+    $media = $media->select('*');
+
+    if (isset($request->search)) {
+      $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
+    }
+
+    $media = $media->paginate(100);
+
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($media),
+      'message' => 'Media successfully fetched',
+      'data' => $media,
+    ], 200);
+  }
 }
