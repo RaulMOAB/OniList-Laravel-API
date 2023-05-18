@@ -11,6 +11,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\RelationsController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\PeopleDubController;
 use App\Http\Controllers\WorksInController;
 
 /*
@@ -94,6 +95,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/manga/manhwa', [MediaController::class, 'manhwaManga']);
     Route::get('/manga/popular', [MediaController::class, 'popularManga']);
     Route::post('/search/manga', [MediaController::class, 'filteredMediaManga']);
+    Route::post('/search/media', [MediaController::class, 'filteredMedia']);
    
 
     Route::get('/send/{email}', [MailController::class, 'index']);

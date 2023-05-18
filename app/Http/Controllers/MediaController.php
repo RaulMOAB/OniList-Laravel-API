@@ -239,7 +239,7 @@ class MediaController extends Controller
       $media = $media->where('airing_status', $request->airing_status);
     }
 
-    $media = $media->paginate(18);
+    $media = $media->paginate(100);
 
     return response()->json([
       'status' => 'success',
@@ -265,6 +265,14 @@ class MediaController extends Controller
       $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
     }
 
+    if (isset($request->tags)) {
+      $media = $media->where('tags', 'LIKE', '%' . $request->tags . '%');
+    }
+
+    if (isset($request->format)) {
+      $media = $media->where('format', $request->format);
+    }
+
     if (isset($request->genres)) {
       $media = $media->where('genres', 'LIKE', '%' . $request->genres . '%');
     }
@@ -273,7 +281,7 @@ class MediaController extends Controller
       $media = $media->where('airing_status', $request->airing_status);
     }
 
-    $media = $media->paginate(18);
+    $media = $media->paginate(100);
 
     return response()->json([
       'status' => 'success',
@@ -294,5 +302,26 @@ class MediaController extends Controller
   })->count();
 
   return response()->json(['count' => $count]);
+  }
+
+  public function filteredMedia(Request $request)
+  {
+
+    $media = new Media();
+
+    $media = $media->select('*');
+
+    if (isset($request->search)) {
+      $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
+    }
+
+    $media = $media->paginate(100);
+
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($media),
+      'message' => 'Media successfully fetched',
+      'data' => $media,
+    ], 200);
   }
 }
