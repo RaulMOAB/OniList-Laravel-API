@@ -238,7 +238,7 @@ class LibraryController extends Controller
             'format',
             'genres',
             'airing_status',
-            'episodes',
+            'chapters',
             'airing_status',
         ]);
 
