@@ -11,6 +11,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\RelationsController;
 use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\PeopleDubController;
 use App\Http\Controllers\WorksInController;
 
 /*
@@ -94,7 +95,8 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/manga/manhwa', [MediaController::class, 'manhwaManga']);
     Route::get('/manga/popular', [MediaController::class, 'popularManga']);
     Route::post('/search/manga', [MediaController::class, 'filteredMediaManga']);
-
+    Route::post('/search/media', [MediaController::class, 'filteredMedia']);
+   
 
     Route::get('/send/{email}', [MailController::class, 'index']);
     Route::post('/forgot-password', [MailController::class, 'forgotPassword']);
@@ -128,4 +130,9 @@ Route::middleware(['cors'])->group(function () {
     //Staff
     Route::get('/staff/{id}', [PeopleController::class, 'getStaffPerson']);
     Route::get('/{media_id}/staff', [WorksInController::class, 'getStaff']);
+    Route::get('/staff/dub/{id}', [PeopleDubController::class, 'personDubCharacter']);
+    Route::get('/staff/worksin/{id}', [WorksInController::class, 'personWorksIn']);
 });
+
+Route::get('/media/{id}/users', [MediaController::class, 'countUsersHasMedia']);
+

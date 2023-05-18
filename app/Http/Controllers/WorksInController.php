@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\People;
 use App\Models\Staff;
+use App\Models\Media;
 use Illuminate\Http\Request;
 
 class WorksInController extends Controller
@@ -21,5 +22,18 @@ class WorksInController extends Controller
         }
 
         return response()->json($ppl_works_in);
+    }
+
+    public function personWorksIn($id)
+    {
+        $medias = [];
+        $person_work_in = Staff::where('person_id', $id)->paginate(50);
+
+        foreach ($person_work_in as $media) {
+                
+            array_push($medias, Media::where('id', $media['media_id'])->first());
+        }
+
+        return response()->json($medias);
     }
 }

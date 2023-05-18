@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 
 class MediaController extends Controller
 {
+
+
   private function getPopularMedias(string $query, string $type): array
   {
     //Call to get most popular media
@@ -237,7 +239,7 @@ class MediaController extends Controller
       $media = $media->where('airing_status', $request->airing_status);
     }
 
-    $media = $media->paginate(18);
+    $media = $media->paginate(100);
 
     return response()->json([
       'status' => 'success',
@@ -263,6 +265,14 @@ class MediaController extends Controller
       $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
     }
 
+    if (isset($request->tags)) {
+      $media = $media->where('tags', 'LIKE', '%' . $request->tags . '%');
+    }
+
+    if (isset($request->format)) {
+      $media = $media->where('format', $request->format);
+    }
+
     if (isset($request->genres)) {
       $media = $media->where('genres', 'LIKE', '%' . $request->genres . '%');
     }
@@ -271,7 +281,41 @@ class MediaController extends Controller
       $media = $media->where('airing_status', $request->airing_status);
     }
 
-    $media = $media->paginate(18);
+    $media = $media->paginate(100);
+
+    return response()->json([
+      'status' => 'success',
+      'media_length' => count($media),
+      'message' => 'Media successfully fetched',
+      'data' => $media,
+    ], 200);
+  }
+
+  public function countUsersHasMedia(string $media_id)
+  {
+    $media_status = ['WATCHING', 'READING', 'PLAN TO WATCH', 'PLAN TO READ', 'COMPLETED', 'REWATCHING', 'REREADING', 'PAUSED', 'DROPPED'];
+
+
+    $count = Media::whereHas('users', function ($query) use ($media_id, $media_status) {
+      $query->where('id', $media_id)
+            ->whereIn('status', $media_status);
+  })->count();
+
+  return response()->json(['count' => $count]);
+  }
+
+  public function filteredMedia(Request $request)
+  {
+
+    $media = new Media();
+
+    $media = $media->select('*');
+
+    if (isset($request->search)) {
+      $media = $media->where('title', 'LIKE', '%' . $request->search . '%');
+    }
+
+    $media = $media->paginate(100);
 
     return response()->json([
       'status' => 'success',

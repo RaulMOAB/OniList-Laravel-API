@@ -17,6 +17,11 @@ class PeopleController extends Controller
 
         $job = Staff::where('person_id', $person_id)->first();
 
+        if($job == null)
+        {
+            $job = '';
+        }
+
         return response()->json([
             'person' => $person,
             'job'    => $job,
