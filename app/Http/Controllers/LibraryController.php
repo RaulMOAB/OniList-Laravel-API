@@ -266,7 +266,7 @@ class LibraryController extends Controller
         $favorite_media_list_with_status = [];
 
         foreach ($subscribed_media as $media) {
-            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->where('favorite', 1)->get();
+            $status = UserSubscribe::where('user_id', $user->id)->where('media_id', $media->media_id)->where('favorite', 1)->first();
             $subscribed_media_status = ['media' => $media, 'status' => $status];
             array_push($favorite_media_list_with_status, $subscribed_media_status);
         }
@@ -327,6 +327,19 @@ class LibraryController extends Controller
         } else {
             $error_msg = "Error: Attempted to update " . $request->media_id . " but SELECT failed.";
             return response(["message" => $media_status]); //*1 respuesta OK 0 respuesta mala
+        }
+    }
+
+    public function deleteFavorite(Request $request)
+    {
+        $favorite = UserSubscribe::updateOrCreate(
+            ['user_id' => $request->user_id, 'media_id' => $request->media_id],
+            ['favorite' => $request->favorite]
+        );
+        if($favorite){
+            return response()->json(["success"=>"Favorite deleted."]);
+        }else{
+            return response()->json(["error" => "Something went wrong deleting your favorite media."]);
         }
     }
 

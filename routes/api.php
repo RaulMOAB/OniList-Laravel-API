@@ -106,6 +106,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/account/{id}', [AccountController::class, 'show']);
 
 
+    Route::post('/library/delete/favorite', [LibraryController::class, 'deleteFavorite']);
     Route::get('/library/{username}', [LibraryController::class, 'libraryInfo']);
     Route::get('/library/{username}/animelist', [LibraryController::class, 'animeList']);
     Route::get('/library/{username}/mangalist', [LibraryController::class, 'mangaList']);
