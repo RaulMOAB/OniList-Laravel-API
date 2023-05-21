@@ -71,7 +71,7 @@ class MailController extends Controller
         }
         $code = rand(100000, 999999);
         $token = Str::random(100);
-        $url = "http://localhost:3000/recover-password/$token";
+        $url = "https://onilist.club/recover-password/$token";
 
         // email body
         $data = [
