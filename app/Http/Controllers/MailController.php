@@ -15,18 +15,18 @@ use Illuminate\Support\Facades\DB;
 class MailController extends Controller
 {
 
+    /**
+     * Function to renew user's password
+     */
     public function renewPassword(Request $request)
     {
-        $code = $request->code;
-        $token = $request->token;
+        $code     = $request->code;
+        $token    = $request->token;
         $password = $request->password;
         $attempts = $request->attempts;
-        $email = MailController::verifyCode($code);
+        $email    = MailController::verifyCode($code);
+        $count    = ForgotPassword::where('token', $token)->count();
 
-
-
-
-        $count = ForgotPassword::where('token', $token)->count();
         if ($count === 0) {
             return response()->json([
                 'error' => 'Invalid token, please verify your email box or try the process again.'
@@ -60,6 +60,10 @@ class MailController extends Controller
 
 
     }
+
+    /**
+     * Function to send an email when users forget their password
+     */
     public function forgotPassword(Request $request)
     {
         $email = $request->email;
@@ -76,24 +80,24 @@ class MailController extends Controller
         // email body
         $data = [
             'subject' => 'Onilist Mail',
-            'body' => 'Hello, to renew your password copy the code and click the next url:',
-            'url' => $url,
-            'code' => $code,
+            'body'    => 'Hello, to renew your password copy the code and click the next url:',
+            'url'     => $url,
+            'code'    => $code,
         ];
         $verify_if_mail_exist = Verify::where('email', $email)->first();
 
-        // if email does not exist in DB create new row
+        // if email does not exist in DB create a new row
         if ($verify_if_mail_exist == null) {
             $create_verification = Verify::create([
                 'email' => $email,
-                'code' => $code,
+                'code'  => $code,
             ]);
         }
-        //else update existing row
+        //else update an existing row
         else {
             Verify::where('email', $email)->update(['code' => $code,]);
         }
-        // send mail
+        // send email
         try {
             ForgotPassword::create([
                 'email' => $email,
@@ -135,19 +139,19 @@ class MailController extends Controller
 
         $verify_if_mail_exist = Verify::where('email', $email)->first();
 
-        // if email does not exist in DB create new row
+        // if email does not exist in DB create a new row
         if ($verify_if_mail_exist == null) {
             $create_verification = Verify::create([
                 'email' => $email,
                 'code' => $code,
             ]);
         }
-        //else update existing row
+        //else update an existing row
         else {
             Verify::where('email', $email)->update(['code' => $code,]);
         }
 
-        // send mail
+        // send email
         try {
             Mail::to($email)->send(new MailNotify($data));
             return response()->json([
@@ -163,9 +167,9 @@ class MailController extends Controller
 
     public function send(Request $request)
     {
-        $email = $request->email;
+        $email    = $request->email;
         $password = $request->password;
-        $id = $request->id;
+        $id   = $request->id;
         $user = User::find($id);
 
         if (!$user) {
@@ -196,18 +200,18 @@ class MailController extends Controller
 
             $verify_if_mail_exist = Verify::where('email', $email)->first();
 
-            // if email does not exist in DB create new row
+            // if email does not exist in DB create new a row
             if ($verify_if_mail_exist == null) {
                 $create_verification = Verify::create([
                     'email' => $email,
                     'code' => $code,
                 ]);
             }
-            //else update existing row
+            //else update an existing row
             else {
                 Verify::where('email', $email)->update(['code' => $code,]);
             }
-            // send mail
+            // send email
             try {
                 Mail::to($email)->send(new MailNotify($data));
                 return response()->json([
@@ -225,6 +229,11 @@ class MailController extends Controller
         }
     }
 
+    /**
+     * Function to verify an email
+     * @param email
+     * @param code
+     */
     static function verifyMail($email, $code)
     {
         $verify_mail = Verify::where('email', $email)->get();
@@ -237,6 +246,11 @@ class MailController extends Controller
             return false;
         }
     }
+
+    /**
+     * Function to verify if the code sent to user is the code user send
+     * @param code
+     */
         static function verifyCode($code)
     {
         $verify_code = Verify::where('code', $code)->first();

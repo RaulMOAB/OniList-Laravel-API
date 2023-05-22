@@ -22,24 +22,16 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'email'    => 'required|string|email',
             'password' => 'required|string',
         ]);
 
         $credentials = $request->only('email', 'password');
         $token = JWTAuth::attempt($credentials);//?Devuelve el token
-    
-
-        // return response()->json([
-        //     'token' => $token,
-        //     'email' => $request['email'],
-        //     'password' => $request['password'],
-        //     'user' => $user
-        // ]);
 
         if (!$token) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Incorrect credentials',
             ], 401);
         }
@@ -47,10 +39,10 @@ class AuthController extends Controller
         $user = Auth::user();
         return response()->json([
                 'status' => 'success',
-                'user' => $user,
-                'auth' => [
+                'user'   => $user,
+                'auth'   => [
                     'token' => $token,
-                    'type' => 'bearer',
+                    'type'  => 'bearer',
                 ]
             ])->withCookie(cookie('token',$token,60));
 
@@ -59,14 +51,13 @@ class AuthController extends Controller
     public function register(Request $request){
 
         //TODO delete row in 1 hour (secondary)
-
         $verify_account = MailController::verifyMail($request->email, $request->code);
 
         if ($verify_account) 
         {
             $request->validate([
                 'username' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
+                'email'    => 'required|string|email|max:255|unique:users',
                 'password' => ['required', Password::min(8)
                 ->mixedCase() // Uppercase and Lowercase
                 ->letters()   // Letters
@@ -76,12 +67,12 @@ class AuthController extends Controller
             ]);
     
             $user = User::create([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => "registered_user",
+                'username'     => $request->username,
+                'email'        => $request->email,
+                'password'     => Hash::make($request->password),
+                'role'         => "registered_user",
                 'profile_image'=>'default-profile.png',
-                'banner_image'=>'default-banner.jpg'
+                'banner_image' =>'default-banner.jpg'
             ]);
             //TODO Devolver el usuario entero
             $delete_verified_mail = Verify::where('email', $request->email)->delete();
@@ -92,22 +83,22 @@ class AuthController extends Controller
             $token = JWTAuth::attempt($credentials);
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'User created successfully',
-                'user' => $user,
+                'status'     => 'success',
+                'message'    => 'User created successfully',
+                'user'       => $user,
                 'registered' => true,
                 'auth' => [
                    'token' => $token,
-                 'type' => 'bearer',
+                   'type'  => 'bearer',
                 ]
             ]);
         }
         else{
             return response()->json([
-                'error' => 'Invalid code',
-                'message' => 'Invalid code',
+                'error'      => 'Invalid code',
+                'message'    => 'Invalid code',
                 'registered' => false,
-                'code' => $request->code,
+                'code'       => $request->code,
             ]);
         }
     }
@@ -125,11 +116,11 @@ class AuthController extends Controller
     public function refresh()
     {
         return response()->json([
-            'status' => 'success',
-            'user' => Auth::user(),
+            'status'        => 'success',
+            'user'          => Auth::user(),
             'authorisation' => [
                 'token' => Auth::refresh(),
-                'type' => 'bearer',
+                'type'  => 'bearer',
             ]
         ]);
     }

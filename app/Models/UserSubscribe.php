@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+
 
 
 class UserSubscribe extends Model
@@ -26,8 +26,4 @@ class UserSubscribe extends Model
         'private'
     ];
 
-
-    // protected $casts = [
-    //     'start_date' => 'string'
-    // ];
 }

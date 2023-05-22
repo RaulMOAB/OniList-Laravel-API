@@ -10,7 +10,7 @@ class PeopleDubController extends Controller
 {
     public function personDubCharacter($id) {
 
-        $status = '';
+        $status     = '';
         $characters = [];
 
         if(Dubbers::where('person_id', $id)->count() === 0)
@@ -31,7 +31,7 @@ class PeopleDubController extends Controller
 
 
         return response()->json([
-            'status' => $status,
+            'status'     => $status,
             'characters' => $characters,
         ]);
     }
