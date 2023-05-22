@@ -17,6 +17,12 @@ class LibraryController extends Controller
     }
 
 
+    /**
+     * 
+     * Get stats of users anime library
+     * @param string $username
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function animelistStats(string $username)
     {
         $user = User::where('username', $username)->first();
@@ -57,7 +63,6 @@ class LibraryController extends Controller
         $genre_data    = array_values($genres_result);
         $genres_labels = array_keys($genres_result);
 
-        // Obtener números de repeticiones
         $status_results = array_count_values($status_distribution); //return counted values and each keys
         $status_data    = array_values($status_results); //return array only with the values
         $status_labels  = array_keys($status_results); //return array with the keys
@@ -76,6 +81,12 @@ class LibraryController extends Controller
         return response()->json($animelist_data);
     }
 
+    /**
+     * Get stats of users manga library
+     * 
+     * @param string $username
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function mangalistStats(string $username)
     {
         $user = User::where('username', $username)->first();
@@ -116,7 +127,6 @@ class LibraryController extends Controller
         $genre_data    = array_values($genres_result);
         $genres_labels = array_keys($genres_result);
 
-        // Obtener números de repeticiones
         $status_results = array_count_values($status_distribution); //return counted values and each keys
         $status_data    = array_values($status_results); //return array only with the values
         $status_labels  = array_keys($status_results); //return array with the keys
@@ -136,6 +146,11 @@ class LibraryController extends Controller
     }
 
 
+    /**
+     * General user stats of his library
+     * @param string $username
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function overviewStats(string $username)
     {
         $user = User::where('username', $username)->first();
@@ -223,6 +238,11 @@ class LibraryController extends Controller
 
         return response()->json($anime_list_with_status);
     }
+    /**
+     * Get mangas medias of a user
+     * @param string $username
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function mangaList(string $username)
     {
         $user = User::where('username', $username)->first();
@@ -254,7 +274,7 @@ class LibraryController extends Controller
 
     /**
      * Function to get user favorite medias
-     * @param username 
+     * @param string $username 
      */
     public function favoritesMedias(string $username)
     {
@@ -309,8 +329,8 @@ class LibraryController extends Controller
 
     /**
      * Function to get media status from user library
-     * @param user_id
-     * @param media_id 
+     * @param string $user_id
+     * @param string $media_id 
      */
     public function getMediaStatus(string $user_id, string $media_id)
     {
@@ -392,7 +412,7 @@ class LibraryController extends Controller
 
     /**
      * Function to delete a media from users library
-     * @param media_id
+     * @param mixed $media_id
      */
     public function deleteMedia($media_id)
     {

@@ -8,6 +8,7 @@ use App\Models\Character;
 
 class PeopleDubController extends Controller
 {
+    
     public function personDubCharacter($id) {
 
         $status     = '';

@@ -113,8 +113,6 @@ class MailController extends Controller
                 'error' => "Error while sending your email, please try later."
             ]);
         }
-
-        //TODO Email verification
     }
     public function index($email)
     {
@@ -165,6 +163,11 @@ class MailController extends Controller
         }
     }
 
+    /**
+     * Send email code verification to user
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function send(Request $request)
     {
         $email    = $request->email;

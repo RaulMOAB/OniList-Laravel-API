@@ -23,7 +23,7 @@ class RelationsController extends Controller
         $related_medias = [];
 
         foreach ($medias_relation as $media) {
-            $related_media = Media::where('id', $media["related_media_id"])->first(); //TODO add only needed fields
+            $related_media = Media::where('id', $media["related_media_id"])->first();
             $medias_related_to = ['media_relationship' => $media, 'related_media' => $related_media];
             array_push($related_medias, $medias_related_to);
         }
