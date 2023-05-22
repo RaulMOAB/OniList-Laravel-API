@@ -17,17 +17,17 @@ class AccountController extends Controller
         $this->middleware('auth:api');
     }
 
-    private const BANNER_PATH = 'public/banner/';
+    private const BANNER_PATH  = 'public/banner/';
     private const PROFILE_PATH = 'public/profile/';
 
-    private const DEFAULT_BANNER = 'default-banner.jpg';
+    private const DEFAULT_BANNER  = 'default-banner.jpg';
     private const DEFAULT_PROFILE = 'default-profile.png';
 
     public function updateProfileImage(Request $request)
     {
-        // Obtener la imagen enviada
+        // Get sent image
         $image = $request->file('image');
-        // Verificar si se envió una imagen
+        // Verify if an image was sent
         if (!$image) {
             return response()->json(['error' => 'Error updating your image.'], 400);
         }
@@ -38,11 +38,11 @@ class AccountController extends Controller
             return response()->json(['error' => 'Format not allowed or file size limit exceeded'], 400);
         }
 
-        $id = $request->id;
+        $id   = $request->id;
         $user = User::find($id);
         $type = $request->type;
         $filename_sufix = $user->username;
-        $filename = $user->username . '-'. time() . '.' . $image->getClientOriginalExtension();
+        $filename  = $user->username . '-'. time() . '.' . $image->getClientOriginalExtension();
         $all_files = glob(storage_path("app/public/$type/*"));
 
         foreach ($all_files as $file) {
@@ -59,29 +59,14 @@ class AccountController extends Controller
         } else if ($type === "banner") {
             $user->banner_image = $filename;
         }
-        // Guardar la imagen en la base de datos
+        // Save image to db
         $user->save();
 
         return response()->json(['success' => "Your $type image has been updated"]);
     }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Display the specified user.
      */
     public function show(string $id)
     {
@@ -94,19 +79,11 @@ class AccountController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from storage.
      */
     public function destroy(Request $request,string $id)
     {
-        $user = User::find($id);
+        $user     = User::find($id);
         $password = $request->password;
         if(!$user){
             return response()->json([
@@ -136,7 +113,7 @@ class AccountController extends Controller
 
     public function updateDescription(Request $request)
     {
-        $id = $request->id;
+        $id   = $request->id;
         $user = User::find($id);
         $user->description = $request->description;
         $saved = $user->save();
@@ -149,7 +126,7 @@ class AccountController extends Controller
     }
     public function updateEmail(Request $request)
     {
-        $id = $request->id;
+        $id    = $request->id;
         $email = $request->email;
         $verify_account = MailController::verifyMail($request->email, $request->code);
         if($verify_account){
@@ -168,7 +145,7 @@ class AccountController extends Controller
     }
     public function updatePassword(Request $request){
         $id = $request->id;
-        $new_password = $request->new_password;
+        $new_password  = $request->new_password;
         $last_password = $request->last_password;
 
         $user = User::find($id);

@@ -11,11 +11,15 @@ use Illuminate\Http\Request;
 class PeopleController extends Controller
 {
 
+    /**
+     * Function to get a media staff
+     * @param person_id
+     */
     public function getStaffPerson(string $person_id)
     {
         $person = People::find($person_id);
 
-        $job = Staff::where('person_id', $person_id)->first();
+        $job    = Staff::where('person_id', $person_id)->first();
 
         if($job == null)
         {
@@ -27,6 +31,11 @@ class PeopleController extends Controller
             'job'    => $job,
         ]);
     }
+
+    /**
+     * Function to get the people who dubbs a character
+     * @param character_id
+     */
     public function peopleDubCharacter(string $character_id)
     {
         $ppl_dubs = Dubbers::where('character_id', $character_id)->get();

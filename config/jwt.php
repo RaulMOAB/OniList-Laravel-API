@@ -89,7 +89,7 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 150),//TIME TO EXPIRE IN MINUTES
+    'ttl' => env('JWT_TTL', 10),//TIME TO EXPIRE IN MINUTES
 
     /*
     |--------------------------------------------------------------------------

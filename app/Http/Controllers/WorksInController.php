@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class WorksInController extends Controller
 {
+    /**
+     * Function to get the staff from a media
+     * @param media_id
+     */
     public function getStaff(string $media_id)
     {
         $works_in = Staff::where('media_id', $media_id)->get();
@@ -24,6 +28,10 @@ class WorksInController extends Controller
         return response()->json($ppl_works_in);
     }
 
+    /**
+     * Function to get a peerson from a media by their id
+     * @param id
+     */
     public function personWorksIn($id)
     {
         $medias = [];
