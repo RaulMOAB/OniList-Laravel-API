@@ -23,9 +23,9 @@ class LibraryController extends Controller
         $subscribed_anime = $user->medias()->where('type', 'ANIME')->get();
 
         $status_distribution = [];
-        $genres = [];
+        $genres  = [];
         $formats = [];
-        $years = [];
+        $years   = [];
 
         foreach ($subscribed_anime as $anime) {
             $start_date_splitted = explode("-", $anime->start_date) ?? null;
@@ -46,32 +46,32 @@ class LibraryController extends Controller
         }
         sort($years);
         $years_result = array_count_values($years);
-        $years_data = array_values($years_result);
+        $years_data   = array_values($years_result);
         $years_labels = array_keys($years_result);
 
         $formats_result = array_count_values($formats);
-        $format_data = array_values($formats_result);
-        $format_labels = array_keys($formats_result);
+        $format_data    = array_values($formats_result);
+        $format_labels  = array_keys($formats_result);
 
         $genres_result = array_count_values($genres);
-        $genre_data = array_values($genres_result);
+        $genre_data    = array_values($genres_result);
         $genres_labels = array_keys($genres_result);
 
         // Obtener números de repeticiones
         $status_results = array_count_values($status_distribution); //return counted values and each keys
-        $status_data = array_values($status_results); //return array only with the values
-        $status_labels = array_keys($status_results); //return array with the keys
+        $status_data    = array_values($status_results); //return array only with the values
+        $status_labels  = array_keys($status_results); //return array with the keys
 
 
         $animelist_data = [
-            'labels_years' => $years_labels,
-            'data_years' => $years_data,
+            'labels_years'   => $years_labels,
+            'data_years'     => $years_data,
             'labels_formats' => $format_labels,
-            'data_formats' => $format_data,
-            'labels_genres' => $genres_labels,
-            'data_genres' => $genre_data,
-            'labels_status' => $status_labels,
-            'data_status' => count($status_data) >= 2 ? $status_data : null
+            'data_formats'   => $format_data,
+            'labels_genres'  => $genres_labels,
+            'data_genres'    => $genre_data,
+            'labels_status'  => $status_labels,
+            'data_status'    => count($status_data) >= 2 ? $status_data : null
         ];
         return response()->json($animelist_data);
     }
@@ -82,9 +82,9 @@ class LibraryController extends Controller
         $subscribed_anime = $user->medias()->where('type', 'MANGA')->get();
 
         $status_distribution = [];
-        $genres = [];
+        $genres  = [];
         $formats = [];
-        $years = [];
+        $years   = [];
 
         foreach ($subscribed_anime as $manga) {
 
@@ -105,32 +105,32 @@ class LibraryController extends Controller
         }
         sort($years);
         $years_result = array_count_values($years);
-        $years_data = array_values($years_result);
+        $years_data   = array_values($years_result);
         $years_labels = array_keys($years_result);
 
         $formats_result = array_count_values($formats);
-        $format_data = array_values($formats_result);
-        $format_labels = array_keys($formats_result);
+        $format_data    = array_values($formats_result);
+        $format_labels  = array_keys($formats_result);
 
         $genres_result = array_count_values($genres);
-        $genre_data = array_values($genres_result);
+        $genre_data    = array_values($genres_result);
         $genres_labels = array_keys($genres_result);
 
         // Obtener números de repeticiones
         $status_results = array_count_values($status_distribution); //return counted values and each keys
-        $status_data = array_values($status_results); //return array only with the values
-        $status_labels = array_keys($status_results); //return array with the keys
+        $status_data    = array_values($status_results); //return array only with the values
+        $status_labels  = array_keys($status_results); //return array with the keys
 
 
         $mangalist_data = [
-            'labels_years' => $years_labels,
-            'data_years' => $years_data,
+            'labels_years'   => $years_labels,
+            'data_years'     => $years_data,
             'labels_formats' => $format_labels,
-            'data_formats' => $format_data,
-            'labels_genres' => $genres_labels,
-            'data_genres' => $genre_data,
-            'labels_status' => $status_labels,
-            'data_status' => count($status_data) >= 2 ? $status_data : null
+            'data_formats'   => $format_data,
+            'labels_genres'  => $genres_labels,
+            'data_genres'    => $genre_data,
+            'labels_status'  => $status_labels,
+            'data_status'    => count($status_data) >= 2 ? $status_data : null
         ];
         return response()->json($mangalist_data);
     }
@@ -181,18 +181,17 @@ class LibraryController extends Controller
 
         // Obtener números de repeticiones
         $status_results = array_count_values($status_distribution); //return counted values and each keys
-
-        $status_data = array_values($status_results); //return array only eith the values
+        $status_data    = array_values($status_results); //return array only eith the values
         $current_status = array_keys($status_results); //return array with the keys
 
         $overview_data = [
-            'total_animes' => $total_animes,
+            'total_animes'           => $total_animes,
             'total_episodes_watched' => $total_episodes_watched,
-            'time_watched' => ($total_episodes_watched * 24) / 60, //in hours
-            'total_mangas' => $total_mangas,
-            'total_chapters_readed' => $total_chapters_readed,
-            'labels' => $current_status,
-            'data' => count($status_data) >= 2 ? $status_data : null
+            'time_watched'           => ($total_episodes_watched * 24) / 60, //in hours
+            'total_mangas'           => $total_mangas,
+            'total_chapters_readed'  => $total_chapters_readed,
+            'labels'                 => $current_status,
+            'data'                   => count($status_data) >= 2 ? $status_data : null
         ];
         return response()->json($overview_data);
     }
@@ -252,6 +251,11 @@ class LibraryController extends Controller
 
         return response()->json($anime_list_with_status);
     }
+
+    /**
+     * Function to get user favorite medias
+     * @param username 
+     */
     public function favoritesMedias(string $username)
     {
         $user = User::where('username', $username)->first();
@@ -273,6 +277,11 @@ class LibraryController extends Controller
 
         return response()->json($favorite_media_list_with_status);
     }
+
+    /**
+     * Function to get information from user library
+     * @param username
+     */
     public function libraryInfo(string $username)
     {
         $user = User::where('username', $username)->first();
@@ -298,11 +307,11 @@ class LibraryController extends Controller
         return response()->json($final_data);
     }
 
-
-    // public function getMediaData(string $user_id )
-    // {
-
-    // }
+    /**
+     * Function to get media status from user library
+     * @param user_id
+     * @param media_id 
+     */
     public function getMediaStatus(string $user_id, string $media_id)
     {
         $status = UserSubscribe::where('user_id', $user_id)->where('media_id', $media_id)->first();
@@ -314,38 +323,48 @@ class LibraryController extends Controller
         return response()->json($status);
     }
 
+    /**
+     * Function to set or update a media status
+     */
     public function setMediaStatus(Request $request)
     {
         $media_status = UserSubscribe::updateOrCreate(
             ['user_id' => $request->user_id, 'media_id' => $request->media_id],
-            ['status' => $request->status, 'favorite' => $request->favorite]
+            ['status'  => $request->status, 'favorite'  => $request->favorite]
         );
 
         if ($media_status) {
             $success_msg = $media_status . " rows updated.";
-            return response()->json(["message" => $success_msg]); //*1 respuesta OK 0 respuesta mala           
+            return response()->json(["message" => $success_msg]);
         } else {
             $error_msg = "Error: Attempted to update " . $request->media_id . " but SELECT failed.";
-            return response(["message" => $media_status]); //*1 respuesta OK 0 respuesta mala
+            return response(["message" => $media_status]);
         }
     }
 
+    /**
+     * Function to set or delete favorite status to a media from user library
+     * NOTE: if it's an existing entry, favorite will be updated, if not, it will be created
+     */
     public function deleteFavorite(Request $request)
     {
         $favorite = UserSubscribe::updateOrCreate(
-            ['user_id' => $request->user_id, 'media_id' => $request->media_id],
+            ['user_id'  => $request->user_id, 'media_id' => $request->media_id],
             ['favorite' => $request->favorite]
         );
-        if($favorite){
-            return response()->json(["success"=>"Favorite deleted."]);
-        }else{
+        if ($favorite) {
+            return response()->json(["success" => "Favorite deleted."]);
+        } else {
             return response()->json(["error" => "Something went wrong deleting your favorite media."]);
         }
     }
 
+    /**
+     * Function to insert a media to user library and added favorite status
+     * NOTE: if it's an existing entry, favorite will be updated, if not, it will be created
+     */
     public function insertFavorite(Request $request)
     {
-
         $favorite = UserSubscribe::updateOrCreate(
             ['user_id' => $request->user_id, 'media_id' => $request->media_id],
             ['status' => $request->status, 'favorite' => $request->favorite]
@@ -354,6 +373,11 @@ class LibraryController extends Controller
         return response()->json($favorite);
     }
 
+    /**
+     * Function to add or update a media from user library and setting their data
+     * @param Request this contains all the data that user send by the media editor modal
+     * NOTE: if it's an existing entry, favorite will be updated, if not, it will be created
+     */
     public function insertOrUpdateMediaData(Request $request)
     {
         $favorite = $request->favorite ? 1 : 0;
@@ -363,12 +387,15 @@ class LibraryController extends Controller
             ['status' => $request->status, 'rate' => $request->rate, 'progress' => $request->progress, 'start_date' => $request->start_date, 'end_date' => $request->endDate, 'rewatches' => $request->rewatches, 'notes' => $request->notes, 'favorite' => $favorite]
         );
 
-        return response()->json($favorite);
+        return response()->json($entry);
     }
 
+    /**
+     * Function to delete a media from users library
+     * @param media_id
+     */
     public function deleteMedia($media_id)
     {
-
         $media = UserSubscribe::where('media_id', $media_id)->delete();
 
         return response()->json($media);
