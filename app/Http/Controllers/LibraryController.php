@@ -71,7 +71,7 @@ class LibraryController extends Controller
             'labels_genres' => $genres_labels,
             'data_genres' => $genre_data,
             'labels_status' => $status_labels,
-            'data_status' => count($status_data) > 3 ? $status_data : null
+            'data_status' => count($status_data) >= 2 ? $status_data : null
         ];
         return response()->json($animelist_data);
     }
@@ -130,7 +130,7 @@ class LibraryController extends Controller
             'labels_genres' => $genres_labels,
             'data_genres' => $genre_data,
             'labels_status' => $status_labels,
-            'data_status' => count($status_data) > 3 ? $status_data : null
+            'data_status' => count($status_data) >= 2 ? $status_data : null
         ];
         return response()->json($mangalist_data);
     }
@@ -192,7 +192,7 @@ class LibraryController extends Controller
             'total_mangas' => $total_mangas,
             'total_chapters_readed' => $total_chapters_readed,
             'labels' => $current_status,
-            'data' => count($status_data) > 3 ? $status_data : null
+            'data' => count($status_data) >= 2 ? $status_data : null
         ];
         return response()->json($overview_data);
     }
