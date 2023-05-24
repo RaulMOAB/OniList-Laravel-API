@@ -98,7 +98,7 @@ Route::middleware(['cors'])->group(function () {
     Route::post('/search/media', [MediaController::class, 'filteredMedia']);
    
 
-    Route::get('/send/{email}', [MailController::class, 'index']);
+    Route::get('/send/{email}/{username}', [MailController::class, 'index']);
     Route::post('/forgot-password', [MailController::class, 'forgotPassword']);
     Route::post('/renew-password', [MailController::class, 'renewPassword']);
     Route::post('/send/registered-user-code', [MailController::class, 'send']);

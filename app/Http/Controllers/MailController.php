@@ -99,10 +99,11 @@ class MailController extends Controller
         }
         // send email
         try {
-            ForgotPassword::create([
-                'email' => $email,
-                'token' => $token
-            ]);
+            ForgotPassword::updateOrCreate(
+                ['email' => $email],
+                ['token' => $token],
+                ['email']
+            );
             Mail::to($email)->send(new MailNotify($data, 'emails.renew-password'));
             return response()->json([
                 'success' => 'Check your mail box.'
@@ -114,14 +115,19 @@ class MailController extends Controller
             ]);
         }
     }
-    public function index($email)
+    public function index($email,$username)
     {
         // check if the user exists in users table
         $count = User::where('email', $email)->count();
-
+        $username_exist = User::where('username', $username)->count();
         if ($count > 0) {
             return response()->json([
                 'error' => 'This email is already registered.'
+            ]);
+        }
+        if($username_exist>0){
+            return response()->json([
+                'error' => 'This username is already in use.'
             ]);
         }
 
