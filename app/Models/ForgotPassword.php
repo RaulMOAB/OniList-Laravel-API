@@ -10,7 +10,7 @@ class ForgotPassword extends Model
     use HasFactory;
 
     protected $table = 'password_reset_tokens';
-
+    protected $primaryKey = "email";
     protected $fillable = [
         'email',
         'token',
